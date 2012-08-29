@@ -1,0 +1,142 @@
+<!-- Faber Scriptorum Grammar -->
+
+enable full-backtracking;
+
+line-comment-style '#';
+
+word ID '[a-zA-Z_][a-zA-Z0-9_]*';
+word DIGITS '[0-9]+';
+literal LIT;
+separator BRACE_OPEN '[';
+separator BRACE_CLOSE ']';
+separator PAR_OPEN '(';
+separator PAR_CLOSE ')';
+separator DOT '.';
+separator COMMA ',';
+separator PLUS '+';
+separator MINUS '-';
+separator EQ '==';
+separator NE '<>';
+separator GE '>=';
+separator LE '<=';
+separator ASSIGN '=';
+separator GT '>';
+separator LT '<';
+
+@grammar
+command = 
+	loop_begin |
+	loop_end |
+	if_begin | 
+	else |
+	if_end |
+	case_begin |
+	case_branch |
+	case_end |
+	var_def |
+	assign |
+	edit_begin |
+	edit_end
+	;
+
+@grammar
+symbol = 
+	path
+	;
+
+loop_begin = 
+	'for' ( 'each' ( line=var_name | 'key' MINUS 'value' MINUS 'pair' key=var_name COMMA value=var_name ) 'in' | 'all' ) ( table=path ) 
+	( 'where' filter=disjunction )? 'do' 
+	;
+
+loop_end = 
+	'endfor' | 'done'
+	;
+
+if_begin = 
+	(if='if'|elseif='elseif') BRACE_OPEN cond=disjunction BRACE_CLOSE 'then' 'begin'
+	;
+
+else = 
+	'else'
+	;
+
+if_end = 
+	'endif'
+	;
+
+case_begin = 
+	'case' path 'in'
+	;
+
+case_branch = 
+	(default='*' | expr) PAR_CLOSE
+	;
+
+case_end = 
+	'endcase'
+	;
+
+edit_begin = 
+	'edit' MINUS 'section' (lit=LIT|var=path) 'begin'
+	;
+
+edit_end = 
+	'endedit' | 'end'
+	;
+
+var_def = 
+	def='define' name=var_name (ASSIGN value=expr)?
+	;
+	
+assign = 
+	name=var_name ASSIGN value=expr
+	;
+
+disjunction = 
+	part=conjunction ( 'or' part=conjunction )*
+	;
+
+conjunction =
+	part=condition ( 'and' part=condition )*
+	;
+
+condition = 
+	(neg='not')? ( PAR_OPEN non_atomic=disjunction PAR_CLOSE | atomic=atomic )
+	;
+
+atomic = 
+	bool_comparison=comparison |
+	bool_path=path
+	;
+
+var_name = 
+	ID
+	;
+
+call = 
+	name=ID PAR_OPEN ( arg=expr (COMMA arg=expr)* )* PAR_CLOSE
+	;
+
+path = 
+	sub=path_element (DOT sub=path_element)*
+	;
+
+path_element = 
+	call=call |
+	var=var_name
+	;
+
+comparison = 
+	expr ( EQ | NE | GT | GE | LT | LE ) expr
+	;
+
+expr = 
+	path | 
+	lit=LIT |
+	number
+	;
+
+number =
+	(sign=PLUS|sign=MINUS)? digits=DIGITS (DOT decimals=DIGITS)?
+	;
