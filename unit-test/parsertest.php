@@ -20,13 +20,23 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
 
     public function testLoop() {
 
-		$this->_parse("for all query.getResult().getItems(status, getToday()) do");
-		$this->_parse("for each item in items do");
+        $this->_parse("for all query.getResult().getItems(status, getToday()) do");
+        $this->_parse("for each item in items do");
         $this->_parse("for each key-value-pair k, v in items do");
         $this->_parse("for all items where items.status == Status.RELEASED do");
+        $this->_parse("for each item in items where not item.status == Status.RELEASED and item.duedate <= Date.getToday() do");
 
         $this->_parse("endfor");
         $this->_parse("done");
+
+    }
+
+    public function testIf() {
+
+        $this->_parse("if [ hasTodo == ( isOpen(item) or item.status <> Status.RELEASED ) ] then begin" );
+        $this->_parse("elseif [ not ( isOpen(item) or item.status <> Status.RELEASED ) ] then begin" );
+        $this->_parse("else");
+        $this->_parse("endif");
 
     }
 
@@ -40,6 +50,8 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("Status.RELEASED)");
         $this->_parse("*)");
 
+        $this->_parse("endcase");
+
     }
 
     public function testVarDef() {
@@ -47,6 +59,7 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("define i");
         $this->_parse("define x = 4.2");
         $this->_parse("define today = Date.getToday()");
+        $this->_parse("define YES = TRUE");
 
     }
 
@@ -62,6 +75,9 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
 
         $this->_parse("edit-section 'myfunc' begin");
         $this->_parse("edit-section method.name begin");
+
+        $this->_parse("end");
+        $this->_parse("endedit");
 
     }
 
@@ -113,6 +129,8 @@ class SymbolParserTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testPath() {
+
+        $this->_parse("person.firstName");
 
     }
 

@@ -128,15 +128,20 @@ path_element =
 	;
 
 comparison = 
-	expr ( EQ | NE | GT | GE | LT | LE ) expr
+	lhs=expr ( op=EQ | op=NE | op=GT | op=GE | op=LT | op=LE ) (rhs=expr|rhs=disjunction)
 	;
 
 expr = 
-	path | 
 	lit=LIT |
-	number
+	number |
+	boolean |
+	path
 	;
 
 number =
 	(sign=PLUS|sign=MINUS)? digits=DIGITS (DOT decimals=DIGITS)?
+	;
+
+boolean = 
+	'TRUE' | 'FALSE'
 	;
