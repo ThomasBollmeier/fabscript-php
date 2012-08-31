@@ -173,6 +173,74 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testLogicals() {
+
+        $env = new Fabscript_Environment();
+        $env->set("myNumber", 42);
+        $person = new Person("Normalverbraucher", "Otto");
+        $env->set("person", $person);
+
+        $parser = new Fabscript_Command_Parser();
+        $interpreter = new Fabscript_Interpreter();
+
+        $logicalExpr = $this->interpretCondition(" myNumber == 42 ", $parser, $interpreter);
+        $this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(" myNumber < 42.35 ", $parser, $interpreter);
+        $this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(" myNumber == 42.3 ", $parser, $interpreter);
+        $this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(" myNumber between 30 and 50 ", $parser, $interpreter);
+        $this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(
+            " person.firstName == 'Otto' and person.lastName == 'Normalverbraucher' ", 
+            $parser, 
+            $interpreter
+            );
+        $this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(
+            " not ( person.firstName == 'Otto' and person.lastName == 'Normalverbraucher' ) ", 
+            $parser, 
+            $interpreter
+            );
+        $this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(
+            " person.firstName <> 'Otto' or person.lastName <> 'Normalverbraucher' ", 
+            $parser, 
+            $interpreter
+            );
+        $this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+        $logicalExpr = $this->interpretCondition(
+            " person.getFullname(TRUE) == 'Mr. Otto Normalverbraucher' ", 
+            $parser, 
+            $interpreter
+            );
+        $this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    }
+
+    private function interpretCondition($condStr, $parser, $interpreter) {
+
+        $code = "if [ " . $condStr . " ] then begin";
+
+        $ast = $parser->parseString($code);
+        $this->assertTrue($ast != null);
+
+        $children = $ast->getChildren();
+        $this->assertEquals(1, count($children));
+
+        $cond = $children[0];
+
+        return $interpreter->interpret($cond); 
+
+    }
+
 }
 
 ?>

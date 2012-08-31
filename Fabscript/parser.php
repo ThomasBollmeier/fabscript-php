@@ -2366,7 +2366,7 @@ class _Fabscript_Conjunction_Rule extends Bovinus_Rule {
 	}
 	
 	public function transform($astNode) {
-		
+	
 		// edit-section conjunction-transform {
 		
 		$parts = $astNode->getChildrenById('part');
