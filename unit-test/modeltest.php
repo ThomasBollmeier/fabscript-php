@@ -5,6 +5,7 @@ ini_set('include_path', "..:" . ini_get('include_path'));
 require_once 'Fabscript/environment.php';
 require_once 'Fabscript/expression.php';
 require_once 'Fabscript/logical_expression.php';
+require_once 'Fabscript/block.php';
 
 class Person {
 
@@ -149,6 +150,26 @@ class ModelTest extends PHPUnit_Framework_TestCase {
     	$this->assertEquals(FALSE, $logicalExpr->isTrue($env));
     	$logicalExpr->add(new Fabscript_Comparison("<=", $val, $fifty));
     	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    }
+
+    public function testBlocks() {
+
+        $env = new Fabscript_Environment();
+        $env->set("myNumber", 42);
+        $person = new Person("Normalverbraucher", "Otto");
+        $env->set("person", $person);
+
+        $block = new Fabscript_Text();
+        $block->addRawLine('int answer = ${myNumber};');
+        $block->addRawLine('printf("Guten Tag %s %s\n", "${person.firstName}", "${person.lastName}");');
+        $block->addRawLine('printf("Hello %s!\n", "${person.getFullname(TRUE)}");');
+
+        $lines = $block->getLines($env);
+        echo "\n";
+        foreach ($lines as $line) {
+            echo $line . "\n";
+        }
 
     }
 
