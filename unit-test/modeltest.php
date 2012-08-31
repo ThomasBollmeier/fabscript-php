@@ -4,13 +4,15 @@ ini_set('include_path', "..:" . ini_get('include_path'));
 
 require_once 'Fabscript/environment.php';
 require_once 'Fabscript/expression.php';
+require_once 'Fabscript/logical_expression.php';
 
 class Person {
 
-	public function __construct($lastName, $firstName = "") {
+	public function __construct($lastName, $firstName = "", $isAlive = TRUE) {
 
 		$this->lastName = $lastName;
 		$this->firstName = $firstName;
+		$this->isAlive = $isAlive;
 
 	}
 
@@ -36,7 +38,7 @@ class Person {
 
 }
 
-class EnvironmentTest extends PHPUnit_Framework_TestCase {
+class ModelTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
 
@@ -96,6 +98,60 @@ class EnvironmentTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("Mrs. Hannelore Schachtschmidt", $call->getValue($env));
 
     }
+
+    public function testLogicalExpressions() {
+
+    	$env = new Fabscript_Environment();
+    	$env->set("myNumber", 42);
+
+    	$person = new Person("Normalverbraucher", "Otto");
+    	$env->set("person", $person);
+
+    	$path = new Fabscript_Variable("isAlive", new Fabscript_Variable("person"));
+    	$logicalExpr = new Fabscript_BooleanPath($path);
+
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+    	$person->isAlive = FALSE;
+    	$this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+    	$val = new Fabscript_Variable("myNumber");
+    	$forty_two = new Fabscript_Number("42");
+    	$fourty = new Fabscript_Number("40");
+    	$fifty = new Fabscript_Number("50");
+
+    	$logicalExpr = new Fabscript_Comparison("==", $val, $forty_two);
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Comparison("<>", $val, $forty_two);
+    	$this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Negation($logicalExpr);
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Range($val, $fourty, $fifty);
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Conjunction(array(
+    		new Fabscript_Comparison(">=", $val, $fourty),
+    		new Fabscript_Comparison("<=", $val, $fifty)
+    		));
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Conjunction(array(
+    		new Fabscript_Comparison("==", $val, $fourty),
+    		new Fabscript_Comparison("<=", $val, $fifty)
+    		));
+    	$this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+
+    	$logicalExpr = new Fabscript_Disjunction(array(
+    		new Fabscript_Comparison("==", $val, $fourty)
+    		));
+    	$this->assertEquals(FALSE, $logicalExpr->isTrue($env));
+    	$logicalExpr->add(new Fabscript_Comparison("<=", $val, $fifty));
+    	$this->assertEquals(TRUE, $logicalExpr->isTrue($env));
+
+    }
+
 }
 
 ?>

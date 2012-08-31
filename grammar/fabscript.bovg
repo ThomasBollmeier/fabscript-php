@@ -107,6 +107,7 @@ condition =
 
 atomic = 
 	bool_comparison=comparison |
+	bool_range=range |
 	bool_path=path
 	;
 
@@ -129,6 +130,12 @@ path_element =
 
 comparison = 
 	lhs=expr ( op=EQ | op=NE | op=GT | op=GE | op=LT | op=LE ) (rhs=expr|rhs=disjunction)
+	;
+
+range = 
+	(value=LIT|value=number|value=path) 'between' 
+	(min=LIT|min=number|min=path) 'and' 
+	(max=LIT|max=number|max=path)
 	;
 
 expr = 

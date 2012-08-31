@@ -25,6 +25,7 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("for each key-value-pair k, v in items do");
         $this->_parse("for all items where items.status == Status.RELEASED do");
         $this->_parse("for each item in items where not item.status == Status.RELEASED and item.duedate <= Date.getToday() do");
+        $this->_parse("for each item in items where ( item.orderDate between '2012-07-01' and '2012-07-31' ) do");
 
         $this->_parse("endfor");
         $this->_parse("done");

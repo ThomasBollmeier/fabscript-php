@@ -43,7 +43,7 @@ class Fabscript_BooleanLiteral extends Fabscript_Expression {
 
 class Fabscript_Number extends Fabscript_Expression {
 
-	public function __construct($digits, $decimals, $isNegative) {
+	public function __construct($digits, $decimals="", $isNegative=FALSE) {
 
 		$valStr = $digits;
 		if ($decimals != "") {

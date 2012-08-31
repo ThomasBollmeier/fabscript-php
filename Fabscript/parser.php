@@ -198,11 +198,14 @@ array_push($Fabscript_all_token_types, $Fabscript_KEY_27);
 $Fabscript_KEY_28 = new Bovinus_Keyword('not', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_28);
 
-$Fabscript_KEY_29 = new Bovinus_Keyword('TRUE', TRUE);
+$Fabscript_KEY_29 = new Bovinus_Keyword('between', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_29);
 
-$Fabscript_KEY_30 = new Bovinus_Keyword('FALSE', TRUE);
+$Fabscript_KEY_30 = new Bovinus_Keyword('TRUE', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_30);
+
+$Fabscript_KEY_31 = new Bovinus_Keyword('FALSE', TRUE);
+array_push($Fabscript_all_token_types, $Fabscript_KEY_31);
 
 class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
 
@@ -438,9 +441,9 @@ class _Fabscript_Boolean_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_29;
+		global $Fabscript_KEY_30;
 		
-		return bovinus_tokenNode($Fabscript_KEY_29);
+		return bovinus_tokenNode($Fabscript_KEY_30);
 		
 	}
 	
@@ -452,9 +455,9 @@ class _Fabscript_Boolean_Rule extends Bovinus_Rule {
 	
 	private function _sub_2_1() {
 		
-		global $Fabscript_KEY_30;
+		global $Fabscript_KEY_31;
 		
-		return bovinus_tokenNode($Fabscript_KEY_30);
+		return bovinus_tokenNode($Fabscript_KEY_31);
 		
 	}
 	
@@ -1171,6 +1174,244 @@ class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
 	
 }
 
+class _Fabscript_Range_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('range', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section range-transform {
+
+		$res = new Bovinus_AstNode($astNode->getName());
+		$child = $astNode->getChildAccess();
+
+		$node = new Bovinus_AstNode('value');
+		$res->addChild($node);
+		$node2 = $child->value;
+		if ($node2->getName() == "token") {
+			$node2 = fabscript_literal($node2);
+		}
+		$node2->setId('');
+		$node->addChild($node2);
+
+		$node = new Bovinus_AstNode('min');
+		$res->addChild($node);
+		$node2 = $child->min;
+		if ($node2->getName() == "token") {
+			$node2 = fabscript_literal($node2);
+		}
+		$node2->setId('');
+		$node->addChild($node2);
+
+		$node = new Bovinus_AstNode('max');
+		$res->addChild($node);
+		$node2 = $child->max;
+		if ($node2->getName() == "token") {
+			$node2 = fabscript_literal($node2);
+		}
+		$node2->setId('');
+		$node->addChild($node2);
+
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		array_push($elements, $this->_sub_1_4());
+		array_push($elements, $this->_sub_1_5());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_1_1());
+		array_push($branches, $this->_sub_1_1_2());
+		array_push($branches, $this->_sub_1_1_3());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_1_1() {
+		
+		return $this->_sub_1_1_1_1();
+		
+	}
+	
+	private function _sub_1_1_1_1() {
+		
+		global $Fabscript_LIT;
+		
+		return bovinus_tokenNode($Fabscript_LIT, 'value');
+		
+	}
+	
+	private function _sub_1_1_2() {
+		
+		return $this->_sub_1_1_2_1();
+		
+	}
+	
+	private function _sub_1_1_2_1() {
+		
+		return new _Fabscript_Number_Rule('value');
+		
+	}
+	
+	private function _sub_1_1_3() {
+		
+		return $this->_sub_1_1_3_1();
+		
+	}
+	
+	private function _sub_1_1_3_1() {
+		
+		return new _Fabscript_Path_Rule('value');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_KEY_29;
+		
+		return bovinus_tokenNode($Fabscript_KEY_29);
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_3_1());
+		array_push($branches, $this->_sub_1_3_2());
+		array_push($branches, $this->_sub_1_3_3());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_3_1() {
+		
+		return $this->_sub_1_3_1_1();
+		
+	}
+	
+	private function _sub_1_3_1_1() {
+		
+		global $Fabscript_LIT;
+		
+		return bovinus_tokenNode($Fabscript_LIT, 'min');
+		
+	}
+	
+	private function _sub_1_3_2() {
+		
+		return $this->_sub_1_3_2_1();
+		
+	}
+	
+	private function _sub_1_3_2_1() {
+		
+		return new _Fabscript_Number_Rule('min');
+		
+	}
+	
+	private function _sub_1_3_3() {
+		
+		return $this->_sub_1_3_3_1();
+		
+	}
+	
+	private function _sub_1_3_3_1() {
+		
+		return new _Fabscript_Path_Rule('min');
+		
+	}
+	
+	private function _sub_1_4() {
+		
+		global $Fabscript_KEY_27;
+		
+		return bovinus_tokenNode($Fabscript_KEY_27);
+		
+	}
+	
+	private function _sub_1_5() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_5_1());
+		array_push($branches, $this->_sub_1_5_2());
+		array_push($branches, $this->_sub_1_5_3());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_5_1() {
+		
+		return $this->_sub_1_5_1_1();
+		
+	}
+	
+	private function _sub_1_5_1_1() {
+		
+		global $Fabscript_LIT;
+		
+		return bovinus_tokenNode($Fabscript_LIT, 'max');
+		
+	}
+	
+	private function _sub_1_5_2() {
+		
+		return $this->_sub_1_5_2_1();
+		
+	}
+	
+	private function _sub_1_5_2_1() {
+		
+		return new _Fabscript_Number_Rule('max');
+		
+	}
+	
+	private function _sub_1_5_3() {
+		
+		return $this->_sub_1_5_3_1();
+		
+	}
+	
+	private function _sub_1_5_3_1() {
+		
+		return new _Fabscript_Path_Rule('max');
+		
+	}
+	
+	// edit-section range-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
 class _Fabscript_Symbol_Grammar extends Bovinus_Grammar {
 
 	public function __construct() {
@@ -1823,6 +2064,7 @@ class _Fabscript_Atomic_Rule extends Bovinus_Rule {
 		
 		$start->connect($this->_sub_1())->connect($end);
 		$start->connect($this->_sub_2())->connect($end);
+		$start->connect($this->_sub_3())->connect($end);
 		
 	}
 	
@@ -1858,6 +2100,18 @@ class _Fabscript_Atomic_Rule extends Bovinus_Rule {
 	}
 	
 	private function _sub_2_1() {
+		
+		return new _Fabscript_Range_Rule('bool_range');
+		
+	}
+	
+	private function _sub_3() {
+		
+		return $this->_sub_3_1();
+		
+	}
+	
+	private function _sub_3_1() {
 		
 		return new _Fabscript_Path_Rule('bool_path');
 		
