@@ -22,20 +22,25 @@ require_once 'Fabscript/expression.php';
 require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/environment.php';
 
-interface Fabscript_Block {
-
-	public function addRawLine($rawLine);
+interface Fabscript_Element {
+	
 	public function getLines($env);
 
 }
 
-interface Fabscript_Container extends Fabscript_Block {
+interface Fabscript_TextElement extends Fabscript_Element {
 
-	public function addBlock($block);
+	public function addRawLine($rawLine);
 
 }
 
-class Fabscript_Text implements Fabscript_Block {
+interface Fabscript_Container {
+
+	public function addElement(Fabscript_Element $element);
+
+}
+
+class Fabscript_Text implements Fabscript_TextElement {
 
 	public function __construct() {
 
@@ -43,12 +48,6 @@ class Fabscript_Text implements Fabscript_Block {
 		$this->symbolRegex = '/\$\{([^$]*)\}/';
 		$this->parser = new Fabscript_Symbol_Parser();
 		$this->interpreter = new Fabscript_Interpreter();
-
-	}
-
-	public function addRawLine($rawLine) {
-
-		array_push($this->rawLines, $rawLine);
 
 	}
 
@@ -72,6 +71,12 @@ class Fabscript_Text implements Fabscript_Block {
 
 	}
 
+	public function addRawLine($rawLine) {
+
+		array_push($this->rawLines, $rawLine);
+
+	}
+
 	private function replaceSymbols($matches) {
 
 		$ast = $this->parser->parseString($matches[1]);
@@ -89,7 +94,7 @@ class Fabscript_Text implements Fabscript_Block {
 
 }
 
-class Fabscript_Loop implements Fabscript_Container {
+class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 
 	public function __construct($table, $line="", $key="", $filter=null) {
 
@@ -97,19 +102,9 @@ class Fabscript_Loop implements Fabscript_Container {
 		$this->line = $line;
 		$this->key = $key;
 		$this->filter = $filter; 
-		$this->innerBlocks = array();
+		$this->innerElements = array();
 
-		$this->addBlock(new Fabscript_Text());
-
-	}
-
-	public function addRawLine($rawLine) {
-
-		if (!($this->current instanceof Fabscript_Text)) {
-			$this->addBlock(new Fabscript_Text());			
-		}
-
-		$this->current->addRawLine($rawLine);
+		$this->addElement(new Fabscript_Text());
 
 	}
 
@@ -186,10 +181,20 @@ class Fabscript_Loop implements Fabscript_Container {
 
 	}
 
-	public function addBlock($block) {
+	public function addRawLine($rawLine) {
 
-		array_push($this->innerBlocks, $block);
-		$this->current = $block;
+		if (!($this->current instanceof Fabscript_Text)) {
+			$this->addBlock(new Fabscript_Text());			
+		}
+
+		$this->current->addRawLine($rawLine);
+
+	}
+
+	public function addElement(Fabscript_Element $element) {
+
+		$this->innerElements[] = $element;
+		$this->current = $element;
 
 	}
 
@@ -197,8 +202,8 @@ class Fabscript_Loop implements Fabscript_Container {
 
 		$res = array();
 
-		foreach ($this->innerBlocks as $block) {
-			$res = array_merge($res, $block->getLines($env));
+		foreach ($this->innerElements as $element) {
+			$res = array_merge($res, $element->getLines($env));
 		}
 
 		return $res;
@@ -209,8 +214,80 @@ class Fabscript_Loop implements Fabscript_Container {
 	private $line;
 	private $key;
 	private $filter;
-	private $innerBlocks;
+	private $innerElements;
 	private $current;
+
+}
+
+class Fabscript_Branch implements Fabscript_Container {
+
+	public function __construct($condition) {
+
+		$this->branches = array(array($condition, array(new Fabscript_Text())));
+
+	}
+
+	public function addBranch($condition) {
+
+		$element = new Fabscript_Text();
+		$this->branches[] = array($condition, array($element));
+
+	}
+
+	public function addRawLine($rawLine) {
+
+		$elements = $this->getCurrentContent();
+		$numElems = count($elements);
+
+		if ($elements[$numElems-1] instanceof Fabscript_Text) {
+			$element = $elements[$numElems-1];
+		} else {
+			$element = new Fabscript_Text();
+			$elements[] = $element;
+		}
+
+		$element->addRawLine($rawLine);
+
+	}
+
+	public function getLines($env) {
+
+		$res = array();
+
+		foreach ($this->branches as $branch) {
+			
+			$condition = $branch[0];
+			
+			if ($condition->isTrue($env)) {
+				$elements = $branch[1];
+				foreach ($elements as $element) {
+					$res = array_merge($res, $element->getLines($env));
+				}
+				return $res;
+			}
+
+		}
+
+		return $res;
+
+	}
+
+	public function addElement(Fabscript_Element $element) {
+
+		$elements = $this->getCurrentContent();
+		$blocks[] = $block;
+
+	}
+
+	private function getCurrentContent() {
+
+		$numBranches = count($this->branches);
+
+		return $this->branches[$numBranches-1][1];
+
+	}
+
+	private $branches;
 
 }
 

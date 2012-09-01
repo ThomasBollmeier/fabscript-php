@@ -214,6 +214,28 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			echo $line . "\n";
 		}
 
+		$condition = new Fabscript_Comparison(
+			"<>", 
+			new Fabscript_Variable("firstName", new Fabscript_Variable("person")),
+			new Fabscript_Literal("Otto")
+			);
+		$branch = new Fabscript_Branch($condition);
+		$branch->addRawLine('Vorname: "${person.firstName}"');
+		$condition = new Fabscript_Comparison(
+			"==", 
+			new Fabscript_Variable("lastName", new Fabscript_Variable("person")),
+			new Fabscript_Literal("Normalverbraucher")
+			);
+		$branch->addBranch($condition);
+		$branch->addRawLine('Nachname: "${person.lastName}"');
+
+		$lines = $branch->getLines($env);
+		$this->assertEquals(1, count($lines));
+		echo "\n";
+		foreach ($lines as $line) {
+			echo $line . "\n";
+		}
+
 	}
 
 	public function testLogicals() {
