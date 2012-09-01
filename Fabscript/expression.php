@@ -106,6 +106,25 @@ class Fabscript_Variable extends Fabscript_Path {
 
 	}
 
+	public function getAbsoluteName() {
+
+		$res = $this->name;
+
+		$pathElement = $this->parent;
+		while ($pathElement) {
+			if ($pathElement instanceof Fabscript_Variable) {
+				$res = $pathElement->name . "." . $res;
+			} else {
+				$res = "";
+				break;
+			}
+			$pathElement = $pathElement->parent;
+		}
+
+		return $res;
+
+	}
+
 	public function getValue($env) {
 
 		if ($this->parent == null) {

@@ -20,6 +20,7 @@
 require_once 'Fabscript/parser.php';
 require_once 'Fabscript/expression.php';
 require_once 'Fabscript/logical_expression.php';
+require_once 'Fabscript/block.php';
 
 class Fabscript_Interpreter {
 
@@ -42,10 +43,50 @@ class Fabscript_Interpreter {
 			case "range":
 				return $this->interpret_logical_expr($ast);
 
+			case "loop_begin":
+				return $this->interpret_loop_begin($ast);
+
 			default:
 				throw new Exception("Interpreter error: '" . $ast->getName() . "'");
 
 		}
+
+	}
+
+	private function interpret_loop_begin($ast) {
+
+		$children = $ast->getChildren();
+
+		$table = null;
+		$line = "";
+		$key = "";
+		$filter = null;
+
+		foreach ($children as $child) {
+
+			$hlp = $child->getChildren();
+			$node = $hlp[0];
+
+			switch ($child->getName()) {
+				case "table":
+				case "dictionary":
+					$table = $this->interpret($node);
+					break;
+				case "line":
+				case "value":
+					$line = $node->getText();
+					break;
+				case "key":
+					$key = $node->getText();
+					break;
+				case "filter":
+					$filter = $this->interpret($node);
+					break;
+			}
+
+		}
+
+		return new Fabscript_Loop($table, $line, $key, $filter);
 
 	}
 
