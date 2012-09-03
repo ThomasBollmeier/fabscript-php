@@ -46,6 +46,16 @@ class Fabscript_Interpreter {
 			case "loop_begin":
 				return $this->interpret_loop_begin($ast);
 
+			case "if_begin":
+				return $this->interpret_if_begin($ast);
+			case "elseif":
+				return $this->interpret_elseif($ast);
+
+			case "case_begin":
+				return $this->interpret_case_begin($ast);
+			case "case_branch":
+				return $this->interpret_case_branch($ast);
+
 			default:
 				throw new Exception("Interpreter error: '" . $ast->getName() . "'");
 
@@ -87,6 +97,46 @@ class Fabscript_Interpreter {
 		}
 
 		return new Fabscript_Loop($table, $line, $key, $filter);
+
+	}
+
+	private function interpret_if_begin($ast) {
+
+		$children = $ast->getChildren();
+		$conditionNode = $children[0];
+		$condition = $this->convertToLogicalExpr($this->interpret($conditionNode));
+
+		return new Fabscript_Branch($condition);
+
+	}
+
+	private function interpret_elseif($ast) {
+
+		$children = $ast->getChildren();
+		$conditionNode = $children[0];
+		
+		return $this->convertToLogicalExpr($this->interpret($conditionNode));
+
+	}
+
+	private function interpret_case_begin($ast) {
+
+		$children = $ast->getChildren();
+
+		return $this->interpret($children[0]); // <-- path expression from "case <pathExpr> in..."
+
+	}
+
+	private function interpret_case_branch($ast) {
+
+		$res = array();
+
+		$children = $ast->getChildren();
+		foreach ($children as $child) {
+			$res[] = $this->interpret($child); // <-- expression from "<expr> [,<expr2> [,...] ])"
+		}
+
+		return $res;
 
 	}
 
@@ -291,6 +341,18 @@ class Fabscript_Interpreter {
 			default:
 				throw new Exception("Interpreter error");	
 
+		}
+
+	}
+
+	private function convertToLogicalExpr($expr) {
+
+		if ($expr instanceof Fabscript_LogicalExpr) {
+			return $expr;
+		} elseif ($expr instanceof Fabscript_Path) {
+			return new Fabscript_BooleanPath($expr);
+		} else {
+			throw new Exception("Cannot convert to logical expression");
 		}
 
 	}

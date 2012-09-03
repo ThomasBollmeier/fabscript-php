@@ -70,7 +70,7 @@ case_begin =
 	;
 
 case_branch = 
-	(default='*' | expr) PAR_CLOSE
+	(default='*' | expr=expr (COMMA expr=expr)* ) PAR_CLOSE
 	;
 
 case_end = 

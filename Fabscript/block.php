@@ -34,7 +34,7 @@ interface Fabscript_TextElement extends Fabscript_Element {
 
 }
 
-interface Fabscript_Container {
+interface Fabscript_Container extends Fabscript_TextElement {
 
 	public function addElement(Fabscript_Element $element);
 
@@ -94,7 +94,49 @@ class Fabscript_Text implements Fabscript_TextElement {
 
 }
 
-class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
+class Fabscript_Block implements Fabscript_Container {
+
+	public function __construct() {
+
+		$this->elements = array(new Fabscript_Text());
+
+	}
+
+	public function getLines($env) {
+
+		$res = array();
+
+		foreach ($this->elements as $element) {
+			$res = array_merge($res, $element->getLines($env));
+		}
+
+		return $res;
+
+	}
+
+	public function addRawLine($rawLine) {
+
+		$element = end($this->elements);
+		if (!($element instanceof Fabscript_Text)) {
+			$element = new Fabscript_Text();
+			$this->elements[] = $element;
+		}
+
+		$element->addRawLine($rawLine);
+
+	}
+
+	public function addElement(Fabscript_Element $element) {
+
+		$this->elements[] = $element;
+
+	}
+
+	private $elements;
+
+}
+
+class Fabscript_Loop implements Fabscript_Container {
 
 	public function __construct($table, $line="", $key="", $filter=null) {
 
@@ -102,9 +144,7 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 		$this->line = $line;
 		$this->key = $key;
 		$this->filter = $filter; 
-		$this->innerElements = array();
-
-		$this->addElement(new Fabscript_Text());
+		$this->body = new Fabscript_Block();
 
 	}
 
@@ -124,6 +164,8 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 				$lineVarName = "";
 			}
 
+			$filtered = array();
+
 			foreach ($list as $item) {
 				
 				if ($lineVarName != "") {
@@ -134,7 +176,24 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 					continue;
 				}
 
-				$res = array_merge($res, $this->getLinesPerStep($innerEnv));
+				$filtered[] = $item;
+
+			}
+
+			$idx = 0;
+			$lastIdx = count($filtered) - 1;
+
+			foreach ($filtered as $item) {
+				
+				if ($lineVarName != "") {
+					$innerEnv->set($lineVarName, $item);
+				}
+
+				$innerEnv->set("isFirst", $idx == 0);
+				$innerEnv->set("isLast", $idx == $lastIdx);
+				$idx++;
+
+				$res = array_merge($res, $this->body->getLines($innerEnv));
 
 			}
 
@@ -143,6 +202,7 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 			// Looping at list with explicit line variable
 			
 			$list = $this->table->getValue($env);
+			$filtered = array();
 
 			foreach ($list as $item) {
 				
@@ -152,7 +212,22 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 					continue;
 				}
 
-				$res = array_merge($res, $this->getLinesPerStep($innerEnv));
+				$filtered[] = $item;
+
+			}
+
+			$idx = 0;
+			$lastIdx = count($filtered) - 1;
+
+			foreach ($filtered as $item) {
+				
+				$innerEnv->set($this->line, $item);
+
+				$innerEnv->set("isFirst", $idx == 0);
+				$innerEnv->set("isLast", $idx == $lastIdx);
+				$idx++;
+				
+				$res = array_merge($res, $this->body->getLines($innerEnv));
 
 			}
 
@@ -161,6 +236,7 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 			// Looping at dictionary with key value pairs
 			
 			$dict = $this->table->getValue($env);
+			$filtered = array();
 
 			foreach ($dict as $key => $value) {
 				
@@ -171,7 +247,23 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 					continue;
 				}
 
-				$res = array_merge($res, $this->getLinesPerStep($innerEnv));
+				$filtered[$key] = $value;
+
+			}
+
+			$idx = 0;
+			$lastIdx = count($filtered) - 1;
+
+			foreach ($filtered as $key => $value) {
+				
+				$innerEnv->set($this->key, $key);
+				$innerEnv->set($this->line, $value);
+				
+				$innerEnv->set("isFirst", $idx == 0);
+				$innerEnv->set("isLast", $idx == $lastIdx);
+				$idx++;
+				
+				$res = array_merge($res, $this->body->getLines($innerEnv));
 
 			}
 
@@ -183,30 +275,13 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 
 	public function addRawLine($rawLine) {
 
-		if (!($this->current instanceof Fabscript_Text)) {
-			$this->addBlock(new Fabscript_Text());			
-		}
-
-		$this->current->addRawLine($rawLine);
+		$this->body->addRawLine($rawLine);
 
 	}
 
 	public function addElement(Fabscript_Element $element) {
 
-		$this->innerElements[] = $element;
-		$this->current = $element;
-
-	}
-
-	private function getLinesPerStep($env) {
-
-		$res = array();
-
-		foreach ($this->innerElements as $element) {
-			$res = array_merge($res, $element->getLines($env));
-		}
-
-		return $res;
+		$this->body->addElement($element);
 
 	}
 
@@ -214,8 +289,7 @@ class Fabscript_Loop implements Fabscript_TextElement, Fabscript_Container {
 	private $line;
 	private $key;
 	private $filter;
-	private $innerElements;
-	private $current;
+	private $body;
 
 }
 
@@ -223,71 +297,60 @@ class Fabscript_Branch implements Fabscript_Container {
 
 	public function __construct($condition) {
 
-		$this->branches = array(array($condition, array(new Fabscript_Text())));
+		$this->branches = array(array($condition, new Fabscript_Block()));
+		$this->hasDefault = FALSE;
 
 	}
 
 	public function addBranch($condition) {
 
-		$element = new Fabscript_Text();
-		$this->branches[] = array($condition, array($element));
+		if ($this->hasDefault) {
+			throw new Exception("ELSEIF branch must not be inserted after ELSE branch");
+		}
+
+		$this->branches[] = array($condition, new Fabscript_Block());
+
+	}
+
+	public function addDefaultBranch() {
+
+		$this->branches[] = array(null, new Fabscript_Block());
+		$this->hasDefault = TRUE;
 
 	}
 
 	public function addRawLine($rawLine) {
 
-		$elements = $this->getCurrentContent();
-		$numElems = count($elements);
-
-		if ($elements[$numElems-1] instanceof Fabscript_Text) {
-			$element = $elements[$numElems-1];
-		} else {
-			$element = new Fabscript_Text();
-			$elements[] = $element;
-		}
-
-		$element->addRawLine($rawLine);
+		$branch = end($this->branches);
+		$branch[1]->addRawLine($rawLine);
 
 	}
 
 	public function getLines($env) {
 
-		$res = array();
-
 		foreach ($this->branches as $branch) {
 			
 			$condition = $branch[0];
-			
-			if ($condition->isTrue($env)) {
-				$elements = $branch[1];
-				foreach ($elements as $element) {
-					$res = array_merge($res, $element->getLines($env));
-				}
-				return $res;
+
+			if ($condition == null || $condition->isTrue($env)) {
+				return $branch[1]->getLines($env);
 			}
 
 		}
 
-		return $res;
+		return array();
 
 	}
 
 	public function addElement(Fabscript_Element $element) {
 
-		$elements = $this->getCurrentContent();
-		$blocks[] = $block;
-
-	}
-
-	private function getCurrentContent() {
-
-		$numBranches = count($this->branches);
-
-		return $this->branches[$numBranches-1][1];
+		$branch = end($this->branches);
+		$branch[1]->addElement($element);
 
 	}
 
 	private $branches;
+	private $hasDefault;
 
 }
 

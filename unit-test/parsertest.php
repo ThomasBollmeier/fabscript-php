@@ -49,6 +49,7 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
 
         $this->_parse("'released')");
         $this->_parse("Status.RELEASED)");
+        $this->_parse("Status.RELEASED, Status.CANCELLED)");
         $this->_parse("*)");
 
         $this->_parse("endcase");

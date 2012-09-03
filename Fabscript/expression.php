@@ -162,7 +162,8 @@ class Fabscript_Call extends Fabscript_Path {
 
 		if ($this->parent == null) {
 
-			return call_user_func_array($this->name, $args);
+			$funcname = $env->get($this->name);
+			return call_user_func_array($funcname, $args);
 
 		} else {
 

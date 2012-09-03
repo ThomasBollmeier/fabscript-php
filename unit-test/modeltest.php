@@ -184,7 +184,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			echo $line . "\n";
 		}
 
-		$block = $this->createLoop("for each num in numbers do");
+		$block = $this->createBlock("for each num in numbers do");
 		$block->addRawLine('member[${num}].init();');
 
 		$lines = $block->getLines($env);
@@ -194,7 +194,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			echo $line . "\n";
 		}
 
-		$block = $this->createLoop("for each num in numbers where num between 4 and 6 do");
+		$block = $this->createBlock("for each num in numbers where num between 4 and 6 do");
 		$block->addRawLine('member[${num}].init();');
 
 		$lines = $block->getLines($env);
@@ -204,7 +204,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			echo $line . "\n";
 		}
 
-		$block = $this->createLoop("for each key-value-pair id, name in myEmployees where id between '4711' and '4712' do");
+		$block = $this->createBlock("for each key-value-pair id, name in myEmployees where id between '4711' and '4712' do");
 		$block->addRawLine('Der Mitarbeiter mit der ID "${id}" heisst "${name}".');
 
 		$lines = $block->getLines($env);
@@ -214,20 +214,17 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			echo $line . "\n";
 		}
 
-		$condition = new Fabscript_Comparison(
-			"<>", 
-			new Fabscript_Variable("firstName", new Fabscript_Variable("person")),
-			new Fabscript_Literal("Otto")
-			);
-		$branch = new Fabscript_Branch($condition);
+		$branch = $this->createBlock("if [ person.firstName <> 'Otto'] then begin");
 		$branch->addRawLine('Vorname: "${person.firstName}"');
 		$condition = new Fabscript_Comparison(
-			"==", 
+			"<>", 
 			new Fabscript_Variable("lastName", new Fabscript_Variable("person")),
 			new Fabscript_Literal("Normalverbraucher")
 			);
 		$branch->addBranch($condition);
 		$branch->addRawLine('Nachname: "${person.lastName}"');
+		$branch->addDefaultBranch();
+		$branch->addRawLine('Sie müssen Otto Normalverbraucher sein.');
 
 		$lines = $branch->getLines($env);
 		$this->assertEquals(1, count($lines));
@@ -279,7 +276,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 
 	}
 
-	private function createLoop($command) {
+	private function createBlock($command) {
 
 		$ast = $this->command_parser->parseString($command);
 		$this->assertTrue($ast != null);

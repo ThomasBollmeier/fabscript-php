@@ -1607,7 +1607,12 @@ class _Fabscript_Case_Branch_Rule extends Bovinus_Rule {
 
 		if ($children[0]->getId() != 'default') {
 			$res = new Bovinus_AstNode($astNode->getName());
-			$res->addChild($children[0]);
+			foreach ($children as $child) {
+				if ($child->getId() == 'expr') {
+					$child->setId('');
+					$res->addChild($child);		
+				}
+			}
 			return $res;
 		} else {
 			return new Bovinus_AstNode('default_branch');
@@ -1653,13 +1658,47 @@ class _Fabscript_Case_Branch_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1_2() {
 		
-		return $this->_sub_1_1_2_1();
+		$elements = array();
+		array_push($elements, $this->_sub_1_1_2_1());
+		array_push($elements, $this->_sub_1_1_2_2());
+		
+		return new Bovinus_Sequence($elements);
 		
 	}
 	
 	private function _sub_1_1_2_1() {
 		
-		return new _Fabscript_Expr_Rule();
+		return new _Fabscript_Expr_Rule('expr');
+		
+	}
+	
+	private function _sub_1_1_2_2() {
+		
+		return bovinus_zero_to_many($this->_sub_1_1_2_2_1());
+		
+	}
+	
+	private function _sub_1_1_2_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1_2_2_1_1());
+		array_push($elements, $this->_sub_1_1_2_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1_2_2_1_1() {
+		
+		global $Fabscript_COMMA;
+		
+		return bovinus_tokenNode($Fabscript_COMMA);
+		
+	}
+	
+	private function _sub_1_1_2_2_1_2() {
+		
+		return new _Fabscript_Expr_Rule('expr');
 		
 	}
 	
@@ -2366,7 +2405,7 @@ class _Fabscript_Conjunction_Rule extends Bovinus_Rule {
 	}
 	
 	public function transform($astNode) {
-	
+		
 		// edit-section conjunction-transform {
 		
 		$parts = $astNode->getChildrenById('part');
