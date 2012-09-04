@@ -61,6 +61,7 @@ class Fabscript_CodeCreator {
 				$this->pop();
 				$this->getCurrContainer()->addElement($loop);
 				break;
+				
 			case "if_begin":
 				$branch = $this->interpreter->interpret($ast);
 				$this->push($name, $branch);
@@ -79,6 +80,7 @@ class Fabscript_CodeCreator {
 				$this->pop();
 				$this->getCurrContainer()->addElement($branch);
 				break;
+
 			case "case_begin":
 				$selectPath = $this->interpreter->interpret($ast);
 				$this->push($name, array("path" => $selectPath, "branch" => null));
@@ -134,6 +136,13 @@ class Fabscript_CodeCreator {
 				}
 				$this->pop();
 				$this->getCurrContainer()->addElement($branch);
+				break;
+
+			case "var_decl":
+			case "assign":
+				$varDeclOrAssignment = $this->interpreter->interpret($ast);
+				$obj = $this->getCurrObj();
+				$obj->addElement($varDeclOrAssignment);
 				break;
 
 		}

@@ -354,4 +354,54 @@ class Fabscript_Branch implements Fabscript_Container {
 
 }
 
+class Fabscript_Declaration implements Fabscript_Element {
+
+	public function __construct($varName, $initExpr=null) {
+
+		$this->varName = $varName;
+		$this->initExpr = $initExpr;
+
+	}
+
+	public function getLines($env) {
+
+		$initValue = $this->initExpr ? $this->initExpr->getValue($env) : null;
+		$env->set($this->varName, $initValue);
+
+		return array();
+
+	}
+
+	private $varName;
+	private $initExpr;
+
+}
+
+class Fabscript_Assignment implements Fabscript_Element {
+
+	public function __construct($varName, $valueExpr) {
+
+		$this->varName = $varName;
+		$this->valueExpr = $valueExpr;
+
+	}
+
+	public function getLines($env) {
+
+		$defEnv = $env->getDefiningEnv($this->varName);
+		if ($defEnv == null) {
+			throw new Exception("Variable '{$this->varName}' has not been declared", 1);
+		}
+
+		$defEnv->set($this->varName, $this->valueExpr->getValue($env));
+
+		return array();
+
+	}
+
+	private $varName;
+	private $valueExpr;
+
+}
+
 ?>

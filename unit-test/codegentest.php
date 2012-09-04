@@ -111,6 +111,26 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testVarDeclaration() {
+
+		$employees = array( "A1" => "Meier", "A2" => "Müller", "A3" => "Schulze", "A4" => "Kalkreuth", "A5" => "Itzenplitz" );
+		$this->creator->setGlobalVar("mitarbeiter", $employees);
+		$this->creator->setGlobalVar("ersterBuchstabe", "firstLetter");
+
+		$this->creator->processCommand("declare employee_id");
+		$this->creator->processCommand("for each key-value-pair id, name in mitarbeiter do");
+		$this->creator->processCommand("  employee_id = id");
+		$this->creator->processCommand("  define employee_name=name");
+		$this->creator->processRawLine('${employee_name} hat die ID "${employee_id}"');
+		$this->creator->processCommand("endfor");
+		$this->creator->processRawLine('Letzte ID: "${employee_id}"');
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(6, count($lines));
+		$this->showLines($lines);
+
+	}
+
 	private function showLines($lines) {
 
 		echo "\n";

@@ -33,10 +33,8 @@ command =
 	case_begin |
 	case_branch |
 	case_end |
-	var_def |
-	assign |
-	edit_begin |
-	edit_end
+	var_decl |
+	assign
 	;
 
 @grammar
@@ -77,16 +75,9 @@ case_end =
 	'endcase'
 	;
 
-edit_begin = 
-	'edit' MINUS 'section' (lit=LIT|var=path) 'begin'
-	;
-
-edit_end = 
-	'endedit' | 'end'
-	;
-
-var_def = 
-	def='define' name=var_name (ASSIGN value=expr)?
+var_decl = 
+	'declare' name=var_name |
+	'define' name=var_name ASSIGN value=expr
 	;
 	
 assign = 

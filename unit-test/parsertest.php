@@ -56,9 +56,9 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
 
     }
 
-    public function testVarDef() {
+    public function testVarDecl() {
 
-        $this->_parse("define i");
+        $this->_parse("declare i");
         $this->_parse("define x = 4.2");
         $this->_parse("define today = Date.getToday()");
         $this->_parse("define YES = TRUE");
@@ -70,16 +70,6 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("i = 42");
         $this->_parse("x = 4.2");
         $this->_parse("y = -5.43");
-
-    }
-
-    public function testEditSection() {
-
-        $this->_parse("edit-section 'myfunc' begin");
-        $this->_parse("edit-section method.name begin");
-
-        $this->_parse("end");
-        $this->_parse("endedit");
 
     }
 

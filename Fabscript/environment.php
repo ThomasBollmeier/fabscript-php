@@ -50,6 +50,24 @@ class Fabscript_Environment {
 		
 	}
 
+	public function getDefiningEnv($name) {
+
+		$env = $this;
+
+		while ($env) {
+
+			if (array_key_exists($name, $env->symbols)) {
+				return $env;
+			}
+
+			$env = $env->parent;
+
+		}
+
+		return null;
+
+	}
+
 	private $parent = null;
 	private $symbols;
 
