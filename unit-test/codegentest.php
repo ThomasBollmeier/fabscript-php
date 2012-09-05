@@ -131,6 +131,51 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testTemplate() {
+
+		$employees = array( 
+			"A1" => "Meier", 
+			"A2" => "Müller", 
+			"A3" => "Schulze", 
+			"A4" => "Kalkreuth", 
+			"A5" => "Itzenplitz" 
+			);
+		$this->creator->setGlobalVar("mitarbeiter", $employees);
+		$this->creator->setGlobalVar("ersterBuchstabe", "firstLetter");
+
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine(':> for each key-value-pair id, name in mitarbeiter do');
+		$stream->addLine('  :> if [ isFirst ] then begin');
+		$stream->addLine('>>>>>');
+		$stream->addLine('  :> endif');
+		$stream->addLine('printf("ID: %s, Name: %s\n", "${id}", "${name}")');
+		$stream->addLine('  :> if [ isLast ] then begin');
+		$stream->addLine('<<<<<');
+		$stream->addLine('  :> endif');
+		$stream->addLine(':> endfor');
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(7, count($lines));
+		$this->showLines($lines);
+
+		$this->creator->reset();
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine(':> for each key-value-pair id, name in mitarbeiter \\');
+		$stream->addLine('   where id == "A4" or id == "A5" \\');
+		$stream->addLine('   do');
+		$stream->addLine('printf("ID: %s, Name: %s\n", "${id}", "${name}")');
+		$stream->addLine(':> endfor');
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(2, count($lines));
+		$this->showLines($lines);
+
+	}
+
 	private function showLines($lines) {
 
 		echo "\n";

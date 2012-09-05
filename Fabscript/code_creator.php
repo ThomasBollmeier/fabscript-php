@@ -21,20 +21,22 @@ require_once 'Fabscript/parser.php';
 require_once 'Fabscript/environment.php';
 require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/block.php';
+require_once 'Fabscript/preprocessor.php';
 
 class Fabscript_CodeCreator {
 
 	public function __construct() {
 
-		$this->init();
-
-	}
-
-	public function init() {
-
+		$this->preprocessor = new Fabscript_Preprocessor();
 		$this->parser = new Fabscript_Command_Parser();
 		$this->interpreter = new Fabscript_Interpreter();
 		$this->globalEnv = new Fabscript_Environment();
+		$this->reset();
+		
+	}
+
+	public function reset() {
+
 		$this->stack = array(array("element" => "", "object" => new Fabscript_Block()));
 
 	}
@@ -42,6 +44,22 @@ class Fabscript_CodeCreator {
 	public function setGlobalVar($name, $value) {
 
 		$this->globalEnv->set($name, $value);
+
+	}
+
+	public function processTemplate(Fabscript_LineInStream $template) {
+
+		$lineInfoList = $this->preprocessor->getLineInfo($template);
+
+		foreach ($lineInfoList as $lineInfo) {
+
+			if ($lineInfo['lineType'] == Fabscript_LineType::COMMAND) {
+				$this->processCommand($lineInfo['content']);
+			} else {
+				$this->processRawLine($lineInfo['content']);
+			}
+
+		}
 
 	}
 
@@ -217,6 +235,7 @@ class Fabscript_CodeCreator {
 		
 	}
 
+	private $preprocessor;
 	private $parser;
 	private $interpreter;
 	private $stack;
