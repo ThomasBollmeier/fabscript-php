@@ -66,10 +66,50 @@ class Fabscript_StringsInput implements Fabscript_LineInStream {
 
 	}
 
-
 	private $currIdx;
 	private $lines;
 	private $isOpen = FALSE;
+
+}
+
+class Fabscript_FileInput implements Fabscript_LineInStream {
+
+	public function __construct($filePath) {
+
+		$this->filePath = $filePath;
+		$this->file = null;
+
+	}
+
+	public function open() {
+
+		$this->file = fopen($this->filePath, "r");
+
+	}
+
+	public function close() {
+
+		if ($this->file !== null) {
+
+			fclose($this->file);
+			$this->file = null;
+
+		}
+
+	}
+
+	public function getNextLine() {
+
+		if ($this->file == null || feof($this->file)) {
+			return null;
+		}
+
+		return rtrim(fgets($this->file));
+
+	}
+
+	private $filePath;
+	private $file;
 
 }
 

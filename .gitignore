@@ -11,6 +11,8 @@ Fabscript/Makefile.in
 grammar/Makefile
 grammar/Makefile.in
 install-sh
+m4/Makefile
+m4/Makefile.in
 missing
 unit-test/Makefile
 unit-test/Makefile.in

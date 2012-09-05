@@ -174,6 +174,14 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, count($lines));
 		$this->showLines($lines);
 
+		$this->creator->reset();
+		
+		$this->creator->processTemplate(new Fabscript_FileInput("mitarbeiter.template"));
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(29, count($lines));
+		$this->showLines($lines);
+
 	}
 
 	private function showLines($lines) {

@@ -1,0 +1,27 @@
+<html>
+
+	<head>
+		<title>Unsere Mitarbeiter</title>
+	</head>
+	
+	<body>
+
+		<div id="wrapper">
+
+			<h1>Unsere Mitarbeiter</h1>
+
+			<table>
+
+				<th><td>ID</td><td>Name</td></th>
+
+				:> for each key-value-pair id, name in mitarbeiter do
+				<tr><td>${id}</td><td>${name}</td></tr>				
+				:> endfor
+
+			</table>
+
+		</div>
+
+	</body>
+
+</html>
