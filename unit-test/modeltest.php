@@ -78,6 +78,13 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$env->set("myNumber", 42);
 		$env->set("he", new Person("Schachtschmidt", "Horst") );
 		$env->set("she", new Person("Schachtschmidt", "Hannelore") );
+		$env->set("personInfo", 
+			array(
+				"name" => "Schulze", 
+				"firstName" => "Albert",
+				"obj" => new Person("Schulze", "Albert")
+				)
+			);
 
 		$number = new Fabscript_Number("42", "345", TRUE);
 		$this->assertEquals(-42.345, $number->getValue($env));    
@@ -104,6 +111,16 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 			new Fabscript_Variable("she")
 			);
 		$this->assertEquals("Mrs. Hannelore Schachtschmidt", $call->getValue($env));
+
+		$call = new Fabscript_Call(
+			"getFullname",
+			array(new Fabscript_BooleanLiteral("TRUE")),
+			new Fabscript_ListElement(
+				new Fabscript_Variable("personInfo"),
+				array(new Fabscript_Literal("obj"))
+				)
+			);
+		$this->assertEquals("Mr. Albert Schulze", $call->getValue($env));		
 
 	}
 

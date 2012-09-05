@@ -23,6 +23,14 @@ require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/block.php';
 require_once 'Fabscript/preprocessor.php';
 
+function fabscript_addText($templatePath, $globalVars) {
+
+	$creator = new Fabscript_CodeCreator();
+	$creator->setGlobalVars($globalVars);
+	$creator->createFromTemplate($templatePath);
+
+}
+
 class Fabscript_CodeCreator {
 
 	public function __construct() {
@@ -44,6 +52,26 @@ class Fabscript_CodeCreator {
 	public function setGlobalVar($name, $value) {
 
 		$this->globalEnv->set($name, $value);
+
+	}
+
+	public function setGlobalVars($namesValues) {
+
+		foreach ($namesValues as $name => $value) {
+			$this->globalEnv->set($name, $value);			
+		}
+
+	}
+
+	public function createFromTemplate($templatePath) {
+
+		$this->reset();
+
+		$this->processTemplate(new Fabscript_FileInput($templatePath));
+
+		foreach ($this->getLines() as $line) {
+			echo $line . "\n";
+		}
 
 	}
 

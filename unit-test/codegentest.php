@@ -140,8 +140,16 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 			"A4" => "Kalkreuth", 
 			"A5" => "Itzenplitz" 
 			);
+		$people = array(
+			"chancellors" => array( 
+				new Person("Bismarck", "Otto", FALSE),
+				new Person("Adenauer", "Konrad", FALSE),
+				new Person("Merkel", "Angela")
+				)
+			);
 		$this->creator->setGlobalVar("mitarbeiter", $employees);
 		$this->creator->setGlobalVar("ersterBuchstabe", "firstLetter");
+		$this->creator->setGlobalVar("people", $people);
 
 		$stream = new Fabscript_StringsInput();
 		$stream->addLine(':> for each key-value-pair id, name in mitarbeiter do');
@@ -180,6 +188,20 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 		$lines = $this->creator->getLines();
 		$this->assertEquals(29, count($lines));
+		$this->showLines($lines);
+
+		$this->creator->reset();
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine(':> if [ people["chancellors"][0].isAlive ] then begin');
+		$stream->addLine('${people["chancellors"][0].lastName} ist wohlauf.');
+		$stream->addLine(':> else');
+		$stream->addLine('${people["chancellors"][0].lastName} ist Geschichte.');
+		$stream->addLine(':> endif');
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(1, count($lines));
 		$this->showLines($lines);
 
 	}

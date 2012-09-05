@@ -93,6 +93,12 @@ abstract class Fabscript_Path extends Fabscript_Expression {
 
 	}
 
+	public function getParent() {
+
+		return $this->parent;
+
+	}
+
 	protected $parent;
 
 }
@@ -176,6 +182,34 @@ class Fabscript_Call extends Fabscript_Path {
 
 	private $name;
 	private $arguments;
+
+}
+
+class Fabscript_ListElement extends Fabscript_Path {
+
+	public function __construct($listExpr, $indicesExprs ) { 
+
+		parent::__construct($listExpr->getParent());
+
+		$this->listExpr = $listExpr;
+		$this->indicesExprs = $indicesExprs;
+
+	}
+
+	public function getValue($env) {
+
+		$res = $this->listExpr->getValue($env);
+
+		foreach ($this->indicesExprs as $indexExpr) {
+			$res = $res[$indexExpr->getValue($env)];				
+		}
+
+		return $res;
+
+	}
+
+	private $listExpr;
+	private $indicesExprs;
 
 }
 

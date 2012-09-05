@@ -116,7 +116,8 @@ path =
 
 path_element = 
 	call=call |
-	var=var_name
+	var=var_name |
+	(list=call|list=var_name) (BRACE_OPEN index=expr BRACE_CLOSE)+
 	;
 
 comparison = 

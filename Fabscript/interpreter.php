@@ -33,6 +33,7 @@ class Fabscript_Interpreter {
 			case "number":
 			case "var_name":
 			case "call":
+			case "list-element":
 			case "path":
 				return $this->interpret_expr($ast);
 
@@ -283,6 +284,9 @@ class Fabscript_Interpreter {
 				case "call":
 					$res = $this->interpret_call($element, $parent);
 					break;
+				case "list-element":
+					$res = $this->interpret_list_element($element, $parent);
+					break;
 				default:
 					throw new Exception("Interpreter error: '" . $element->getName() . "'");
 			}
@@ -317,6 +321,40 @@ class Fabscript_Interpreter {
 
 	}
 
+	private function interpret_list_element($ast, $parent=null) {
+
+		$children = $ast->getChildren();
+
+		$list = null;
+		$indices = array();
+
+		for ($i=0; $i < count($children); $i++) {
+
+			if ($i == 0) {
+
+				switch ($children[$i]->getName()) {
+					case "var_name":
+						$list = $this->interpret_var($children[$i], $parent);
+						break;
+					case "call":
+						$list = $this->interpret_call($children[$i], $parent);
+						break;
+					default:
+						throw new Exception("Error in list element");
+				}
+
+			} else {
+
+				$indices[] = $this->interpret($children[$i]);
+
+			}
+
+		}
+
+		return new Fabscript_ListElement($list, $indices);
+
+	}
+
 	private function interpret_expr($ast) {
 
 		switch ($ast->getName()) {
@@ -339,6 +377,9 @@ class Fabscript_Interpreter {
 
 			case "call":
 				return $this->interpret_call($ast);
+
+			case "list-element":
+				return $this->interpret_list_element($ast);
 
 			case "path":
 				return $this->interpret_path($ast);
