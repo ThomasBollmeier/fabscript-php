@@ -71,6 +71,8 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("x = 4.2");
         $this->_parse("y = -5.43");
         $this->_parse("name = conn.query().result[0]['name'].split()");
+        $this->_parse("i = ( 1 + 2 - 3 ) - 4");
+        $this->_parse("eleven = sum(1,(6-2)) + 1");
 
     }
 

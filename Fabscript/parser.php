@@ -661,6 +661,7 @@ class _Fabscript_Expr_Rule extends Bovinus_Rule {
 		$start->connect($this->_sub_2())->connect($end);
 		$start->connect($this->_sub_3())->connect($end);
 		$start->connect($this->_sub_4())->connect($end);
+		$start->connect($this->_sub_5())->connect($end);
 		
 	}
 	
@@ -727,6 +728,18 @@ class _Fabscript_Expr_Rule extends Bovinus_Rule {
 	private function _sub_4_1() {
 		
 		return new _Fabscript_Path_Rule();
+		
+	}
+	
+	private function _sub_5() {
+		
+		return $this->_sub_5_1();
+		
+	}
+	
+	private function _sub_5_1() {
+		
+		return new _Fabscript_Sum_Rule();
 		
 	}
 	
@@ -947,8 +960,6 @@ class _Fabscript_Call_Rule extends Bovinus_Rule {
 		$elements = array();
 		array_push($elements, $this->_sub_1_1());
 		array_push($elements, $this->_sub_1_2());
-		array_push($elements, $this->_sub_1_3());
-		array_push($elements, $this->_sub_1_4());
 		
 		return new Bovinus_Sequence($elements);
 		
@@ -964,51 +975,83 @@ class _Fabscript_Call_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_2() {
 		
+		$branches = array();
+		array_push($branches, $this->_sub_1_2_1());
+		array_push($branches, $this->_sub_1_2_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_2_1_1());
+		array_push($elements, $this->_sub_1_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_2_1_1() {
+		
 		global $Fabscript_PAR_OPEN;
 		
 		return bovinus_tokenNode($Fabscript_PAR_OPEN);
 		
 	}
 	
-	private function _sub_1_3() {
+	private function _sub_1_2_1_2() {
 		
-		return bovinus_zero_to_many($this->_sub_1_3_1());
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
 		
 	}
 	
-	private function _sub_1_3_1() {
+	private function _sub_1_2_2() {
 		
 		$elements = array();
-		array_push($elements, $this->_sub_1_3_1_1());
-		array_push($elements, $this->_sub_1_3_1_2());
+		array_push($elements, $this->_sub_1_2_2_1());
+		array_push($elements, $this->_sub_1_2_2_2());
+		array_push($elements, $this->_sub_1_2_2_3());
+		array_push($elements, $this->_sub_1_2_2_4());
 		
 		return new Bovinus_Sequence($elements);
 		
 	}
 	
-	private function _sub_1_3_1_1() {
+	private function _sub_1_2_2_1() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_1_2_2_2() {
 		
 		return new _Fabscript_Expr_Rule('arg');
 		
 	}
 	
-	private function _sub_1_3_1_2() {
+	private function _sub_1_2_2_3() {
 		
-		return bovinus_zero_to_many($this->_sub_1_3_1_2_1());
+		return bovinus_zero_to_many($this->_sub_1_2_2_3_1());
 		
 	}
 	
-	private function _sub_1_3_1_2_1() {
+	private function _sub_1_2_2_3_1() {
 		
 		$elements = array();
-		array_push($elements, $this->_sub_1_3_1_2_1_1());
-		array_push($elements, $this->_sub_1_3_1_2_1_2());
+		array_push($elements, $this->_sub_1_2_2_3_1_1());
+		array_push($elements, $this->_sub_1_2_2_3_1_2());
 		
 		return new Bovinus_Sequence($elements);
 		
 	}
 	
-	private function _sub_1_3_1_2_1_1() {
+	private function _sub_1_2_2_3_1_1() {
 		
 		global $Fabscript_COMMA;
 		
@@ -1016,13 +1059,13 @@ class _Fabscript_Call_Rule extends Bovinus_Rule {
 		
 	}
 	
-	private function _sub_1_3_1_2_1_2() {
+	private function _sub_1_2_2_3_1_2() {
 		
 		return new _Fabscript_Expr_Rule('arg');
 		
 	}
 	
-	private function _sub_1_4() {
+	private function _sub_1_2_2_4() {
 		
 		global $Fabscript_PAR_CLOSE;
 		
@@ -1721,6 +1764,143 @@ class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
 	
 }
 
+class _Fabscript_Operand_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('operand', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		$start->connect($this->_sub_2())->connect($end);
+		$start->connect($this->_sub_3())->connect($end);
+		$start->connect($this->_sub_4())->connect($end);
+		$start->connect($this->_sub_5())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section operand-transform {
+
+		$children = $astNode->getChildren();
+
+		if (count($children) == 1) {
+
+			$res = $children[0];
+
+			if ($res->getName() == "token") {
+				$res = fabscript_literal($res);
+			}
+
+			return $res;
+
+		} else {
+
+			return $children[1];
+
+		}
+		
+		return $astNode;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		return new _Fabscript_Expr_Rule();
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	private function _sub_2() {
+		
+		return $this->_sub_2_1();
+		
+	}
+	
+	private function _sub_2_1() {
+		
+		global $Fabscript_LIT;
+		
+		return bovinus_tokenNode($Fabscript_LIT);
+		
+	}
+	
+	private function _sub_3() {
+		
+		return $this->_sub_3_1();
+		
+	}
+	
+	private function _sub_3_1() {
+		
+		return new _Fabscript_Number_Rule();
+		
+	}
+	
+	private function _sub_4() {
+		
+		return $this->_sub_4_1();
+		
+	}
+	
+	private function _sub_4_1() {
+		
+		return new _Fabscript_Boolean_Rule();
+		
+	}
+	
+	private function _sub_5() {
+		
+		return $this->_sub_5_1();
+		
+	}
+	
+	private function _sub_5_1() {
+		
+		return new _Fabscript_Path_Rule();
+		
+	}
+	
+	// edit-section operand-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
 class _Fabscript_Range_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
@@ -2074,6 +2254,201 @@ class _Fabscript_Atomic_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section atomic-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Sum_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('sum', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		$start->connect($this->_sub_2())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section sum-transform {
+
+		$child = $astNode->getChildAccess();
+
+		$op1 = $child->op1;
+		$operator = $child->op;
+		$op2 = $child->op2;
+
+		if ($operator->getText() == "+") {
+			
+			$res = new Bovinus_AstNode("sum");
+
+		} else {
+
+			$res = new Bovinus_AstNode("diff");
+
+		}
+
+		$op1->setId('');
+		$op2->setId('');
+
+		$res->addChild($op1);
+		$res->addChild($op2);
+		
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		return new _Fabscript_Operand_Rule('op1');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_2_1());
+		array_push($branches, $this->_sub_1_2_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_2_1() {
+		
+		return $this->_sub_1_2_1_1();
+		
+	}
+	
+	private function _sub_1_2_1_1() {
+		
+		global $Fabscript_PLUS;
+		
+		return bovinus_tokenNode($Fabscript_PLUS, 'op');
+		
+	}
+	
+	private function _sub_1_2_2() {
+		
+		return $this->_sub_1_2_2_1();
+		
+	}
+	
+	private function _sub_1_2_2_1() {
+		
+		global $Fabscript_MINUS;
+		
+		return bovinus_tokenNode($Fabscript_MINUS, 'op');
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		return new _Fabscript_Expr_Rule('op2');
+		
+	}
+	
+	private function _sub_2() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_2_1());
+		array_push($elements, $this->_sub_2_2());
+		array_push($elements, $this->_sub_2_3());
+		array_push($elements, $this->_sub_2_4());
+		array_push($elements, $this->_sub_2_5());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_2_1() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_2_2() {
+		
+		return new _Fabscript_Operand_Rule('op1');
+		
+	}
+	
+	private function _sub_2_3() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_2_3_1());
+		array_push($branches, $this->_sub_2_3_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_2_3_1() {
+		
+		return $this->_sub_2_3_1_1();
+		
+	}
+	
+	private function _sub_2_3_1_1() {
+		
+		global $Fabscript_PLUS;
+		
+		return bovinus_tokenNode($Fabscript_PLUS, 'op');
+		
+	}
+	
+	private function _sub_2_3_2() {
+		
+		return $this->_sub_2_3_2_1();
+		
+	}
+	
+	private function _sub_2_3_2_1() {
+		
+		global $Fabscript_MINUS;
+		
+		return bovinus_tokenNode($Fabscript_MINUS, 'op');
+		
+	}
+	
+	private function _sub_2_4() {
+		
+		return new _Fabscript_Expr_Rule('op2');
+		
+	}
+	
+	private function _sub_2_5() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	// edit-section sum-further-private-methods {
 	
 	// add your methods here...
 	

@@ -35,6 +35,8 @@ class Fabscript_Interpreter {
 			case "call":
 			case "list-element":
 			case "path":
+			case "sum":
+			case "diff":
 				return $this->interpret_expr($ast);
 
 			case "or":
@@ -355,6 +357,24 @@ class Fabscript_Interpreter {
 
 	}
 
+	private function interpret_binop($ast) {
+
+		$children = $ast->getChildren();
+		$op1 = $this->interpret($children[0]);
+		$op2 = $this->interpret($children[1]);
+
+		switch ($ast->getName()) {
+			case "sum":
+				return new Fabscript_BinOp(Fabscript_BinOp::OP_PLUS, $op1, $op2);
+			case "diff":
+				return new Fabscript_BinOp(Fabscript_BinOp::OP_MINUS, $op1, $op2);
+			default:
+				throw new Exception("Unknown binary operator");
+
+		}
+
+	}
+
 	private function interpret_expr($ast) {
 
 		switch ($ast->getName()) {
@@ -383,6 +403,10 @@ class Fabscript_Interpreter {
 
 			case "path":
 				return $this->interpret_path($ast);
+
+			case "sum":
+			case "diff":
+				return $this->interpret_binop($ast);
 
 			default:
 				throw new Exception("Interpreter error");	

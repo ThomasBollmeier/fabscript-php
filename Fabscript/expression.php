@@ -213,4 +213,42 @@ class Fabscript_ListElement extends Fabscript_Path {
 
 }
 
+class Fabscript_BinOp extends Fabscript_Expression {
+
+	const OP_PLUS = 1;
+	const OP_MINUS = 2;
+
+	public function __construct($op, $operand1, $operand2) {
+
+		$this->op = $op;
+		$this->operand1 = $operand1;
+		$this->operand2 = $operand2;
+
+	}
+
+	public function getValue($env) {
+
+		$op1 = $this->operand1->getValue($env);
+		$op2 = $this->operand2->getValue($env);
+
+		switch ($this->op) {
+
+			case self::OP_PLUS:
+				if (!is_string($op1) && !is_string($op2)) {
+					return $op1 + $op2;
+				} else {
+					return "" . $op1 . $op2;
+				}
+			case self::OP_MINUS:
+				return $op1 - $op2;
+		}
+
+	}
+
+	private $op;
+	private $operand1;
+	private $operand2;
+
+}
+
 ?>

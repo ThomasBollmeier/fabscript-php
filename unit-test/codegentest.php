@@ -152,11 +152,13 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->creator->setGlobalVar("people", $people);
 
 		$stream = new Fabscript_StringsInput();
+		$stream->addLine(':> define counter = 10');
 		$stream->addLine(':> for each key-value-pair id, name in mitarbeiter do');
+		$stream->addLine(':> counter = counter + 1');
 		$stream->addLine('  :> if [ isFirst ] then begin');
 		$stream->addLine('>>>>>');
 		$stream->addLine('  :> endif');
-		$stream->addLine('printf("ID: %s, Name: %s\n", "${id}", "${name}")');
+		$stream->addLine('printf("%d -> ID: %s, Name: %s\n", ${counter}, "${id}", "${name}")');
 		$stream->addLine('  :> if [ isLast ] then begin');
 		$stream->addLine('<<<<<');
 		$stream->addLine('  :> endif');

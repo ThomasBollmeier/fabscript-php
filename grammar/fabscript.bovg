@@ -107,7 +107,7 @@ var_name =
 	;
 
 call = 
-	name=ID PAR_OPEN ( arg=expr (COMMA arg=expr)* )* PAR_CLOSE
+	name=ID ( PAR_OPEN PAR_CLOSE | PAR_OPEN arg=expr (COMMA arg=expr)* PAR_CLOSE )
 	;
 
 path = 
@@ -132,6 +132,20 @@ range =
 
 expr = 
 	lit=LIT |
+	number |
+	boolean |
+	path | 
+	sum
+	;
+
+sum = 
+	op1=operand (op=PLUS|op=MINUS) op2=expr |
+	PAR_OPEN op1=operand (op=PLUS|op=MINUS) op2=expr PAR_CLOSE
+	;
+
+operand = 
+	PAR_OPEN expr PAR_CLOSE |
+	LIT |
 	number |
 	boolean |
 	path
