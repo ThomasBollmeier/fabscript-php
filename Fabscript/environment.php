@@ -68,6 +68,12 @@ class Fabscript_Environment {
 
 	}
 
+	public function hasKey($name) {
+
+		return array_key_exists($name, $this->symbols);
+
+	}
+
 	private $parent = null;
 	private $symbols;
 

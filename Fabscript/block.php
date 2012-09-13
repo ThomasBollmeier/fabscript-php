@@ -366,7 +366,12 @@ class Fabscript_Declaration implements Fabscript_Element {
 	public function getLines($env) {
 
 		$initValue = $this->initExpr ? $this->initExpr->getValue($env) : null;
-		$env->set($this->varName, $initValue);
+
+		if (!($env->hasKey($this->varName))) {
+			
+			$env->set($this->varName, $initValue);
+
+		}
 
 		return array();
 

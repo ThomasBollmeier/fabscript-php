@@ -206,6 +206,19 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, count($lines));
 		$this->showLines($lines);
 
+		$this->creator->reset();
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine(':> for all mitarbeiter do');
+		$stream->addLine(':>   define counter = 1');
+		$stream->addLine(':>   counter = counter + 1');
+		$stream->addLine('Zaehler -> ${counter}');
+		$stream->addLine(':> endfor');
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->showLines($lines);
+
 	}
 
 	private function showLines($lines) {
