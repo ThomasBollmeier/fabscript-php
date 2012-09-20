@@ -27,6 +27,8 @@ separator LT '<';
 command = 
 	loop_begin |
 	loop_end |
+	while_begin |
+	while_end |
 	if_begin | 
 	else |
 	if_end |
@@ -49,6 +51,14 @@ loop_begin =
 
 loop_end = 
 	'endfor' | 'done'
+	;
+
+while_begin = 
+	'while' BRACE_OPEN cond=disjunction BRACE_CLOSE 'do'
+	;
+
+while_end = 
+	'endwhile'
 	;
 
 if_begin = 

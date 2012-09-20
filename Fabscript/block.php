@@ -293,6 +293,50 @@ class Fabscript_Loop implements Fabscript_Container {
 
 }
 
+class Fabscript_WhileLoop implements Fabscript_Container {
+
+	public function __construct($condition) {
+
+		$this->condition = $condition;
+		$this->body = new Fabscript_Block();
+
+	}
+
+	public function getLines($env) {
+
+		$res = array();
+
+		while (TRUE) {
+
+			if (!($this->condition->isTrue($env))) {
+				break;
+			}
+
+			$res = array_merge($res, $this->body->getLines($env));
+
+		}
+
+		return $res;
+
+	}
+
+	public function addRawLine($rawLine) {
+
+		$this->body->addRawLine($rawLine);
+
+	}
+
+	public function addElement(Fabscript_Element $element) {
+
+		$this->body->addElement($element);
+
+	}
+
+	private $condition;
+	private $body;
+
+}
+
 class Fabscript_Branch implements Fabscript_Container {
 
 	public function __construct($condition) {

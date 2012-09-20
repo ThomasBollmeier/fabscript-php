@@ -107,6 +107,16 @@ class Fabscript_CodeCreator {
 				$this->pop();
 				$this->getCurrContainer()->addElement($loop);
 				break;
+
+			case "while_begin":
+				$whileLoop = $this->interpreter->interpret($ast);
+				$this->push($name, $whileLoop);
+				break;
+			case "while_end":
+				$whileLoop = $this->getCurrContainer("while_begin");
+				$this->pop();
+				$this->getCurrContainer()->addElement($whileLoop);
+				break;
 				
 			case "if_begin":
 				$branch = $this->interpreter->interpret($ast);

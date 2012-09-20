@@ -147,56 +147,108 @@ array_push($Fabscript_all_token_types, $Fabscript_KEY_10);
 $Fabscript_KEY_11 = new Bovinus_Keyword('done', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_11);
 
-$Fabscript_KEY_12 = new Bovinus_Keyword('if', TRUE);
+$Fabscript_KEY_12 = new Bovinus_Keyword('while', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_12);
 
-$Fabscript_KEY_13 = new Bovinus_Keyword('elseif', TRUE);
+$Fabscript_KEY_13 = new Bovinus_Keyword('endwhile', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_13);
 
-$Fabscript_KEY_14 = new Bovinus_Keyword('then', TRUE);
+$Fabscript_KEY_14 = new Bovinus_Keyword('if', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_14);
 
-$Fabscript_KEY_15 = new Bovinus_Keyword('begin', TRUE);
+$Fabscript_KEY_15 = new Bovinus_Keyword('elseif', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_15);
 
-$Fabscript_KEY_16 = new Bovinus_Keyword('else', TRUE);
+$Fabscript_KEY_16 = new Bovinus_Keyword('then', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_16);
 
-$Fabscript_KEY_17 = new Bovinus_Keyword('endif', TRUE);
+$Fabscript_KEY_17 = new Bovinus_Keyword('begin', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_17);
 
-$Fabscript_KEY_18 = new Bovinus_Keyword('case', TRUE);
+$Fabscript_KEY_18 = new Bovinus_Keyword('else', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_18);
 
-$Fabscript_KEY_19 = new Bovinus_Keyword('*', TRUE);
+$Fabscript_KEY_19 = new Bovinus_Keyword('endif', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_19);
 
-$Fabscript_KEY_20 = new Bovinus_Keyword('endcase', TRUE);
+$Fabscript_KEY_20 = new Bovinus_Keyword('case', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_20);
 
-$Fabscript_KEY_21 = new Bovinus_Keyword('declare', TRUE);
+$Fabscript_KEY_21 = new Bovinus_Keyword('*', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_21);
 
-$Fabscript_KEY_22 = new Bovinus_Keyword('define', TRUE);
+$Fabscript_KEY_22 = new Bovinus_Keyword('endcase', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_22);
 
-$Fabscript_KEY_23 = new Bovinus_Keyword('or', TRUE);
+$Fabscript_KEY_23 = new Bovinus_Keyword('declare', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_23);
 
-$Fabscript_KEY_24 = new Bovinus_Keyword('and', TRUE);
+$Fabscript_KEY_24 = new Bovinus_Keyword('define', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_24);
 
-$Fabscript_KEY_25 = new Bovinus_Keyword('not', TRUE);
+$Fabscript_KEY_25 = new Bovinus_Keyword('or', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_25);
 
-$Fabscript_KEY_26 = new Bovinus_Keyword('between', TRUE);
+$Fabscript_KEY_26 = new Bovinus_Keyword('and', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_26);
 
-$Fabscript_KEY_27 = new Bovinus_Keyword('TRUE', TRUE);
+$Fabscript_KEY_27 = new Bovinus_Keyword('not', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_27);
 
-$Fabscript_KEY_28 = new Bovinus_Keyword('FALSE', TRUE);
+$Fabscript_KEY_28 = new Bovinus_Keyword('between', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_28);
+
+$Fabscript_KEY_29 = new Bovinus_Keyword('TRUE', TRUE);
+array_push($Fabscript_all_token_types, $Fabscript_KEY_29);
+
+$Fabscript_KEY_30 = new Bovinus_Keyword('FALSE', TRUE);
+array_push($Fabscript_all_token_types, $Fabscript_KEY_30);
+
+class _Fabscript_While_End_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('while_end', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section while_end-transform {
+		
+		return new Bovinus_AstNode($astNode->getName());
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_13;
+		
+		return bovinus_tokenNode($Fabscript_KEY_13);
+		
+	}
+	
+	// edit-section while_end-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
 
 class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
 
@@ -432,9 +484,9 @@ class _Fabscript_Boolean_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_27;
+		global $Fabscript_KEY_29;
 		
-		return bovinus_tokenNode($Fabscript_KEY_27);
+		return bovinus_tokenNode($Fabscript_KEY_29);
 		
 	}
 	
@@ -446,9 +498,9 @@ class _Fabscript_Boolean_Rule extends Bovinus_Rule {
 	
 	private function _sub_2_1() {
 		
-		global $Fabscript_KEY_28;
+		global $Fabscript_KEY_30;
 		
-		return bovinus_tokenNode($Fabscript_KEY_28);
+		return bovinus_tokenNode($Fabscript_KEY_30);
 		
 	}
 	
@@ -541,9 +593,9 @@ class _Fabscript_Case_End_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_20;
+		global $Fabscript_KEY_22;
 		
-		return bovinus_tokenNode($Fabscript_KEY_20);
+		return bovinus_tokenNode($Fabscript_KEY_22);
 		
 	}
 	
@@ -587,9 +639,9 @@ class _Fabscript_Else_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_16;
+		global $Fabscript_KEY_18;
 		
-		return bovinus_tokenNode($Fabscript_KEY_16);
+		return bovinus_tokenNode($Fabscript_KEY_18);
 		
 	}
 	
@@ -633,9 +685,9 @@ class _Fabscript_If_End_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_17;
+		global $Fabscript_KEY_19;
 		
-		return bovinus_tokenNode($Fabscript_KEY_17);
+		return bovinus_tokenNode($Fabscript_KEY_19);
 		
 	}
 	
@@ -1146,9 +1198,9 @@ class _Fabscript_Case_Branch_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1_1_1() {
 		
-		global $Fabscript_KEY_19;
+		global $Fabscript_KEY_21;
 		
-		return bovinus_tokenNode($Fabscript_KEY_19, 'default');
+		return bovinus_tokenNode($Fabscript_KEY_21, 'default');
 		
 	}
 	
@@ -1559,9 +1611,9 @@ class _Fabscript_Var_Decl_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_21;
+		global $Fabscript_KEY_23;
 		
-		return bovinus_tokenNode($Fabscript_KEY_21);
+		return bovinus_tokenNode($Fabscript_KEY_23);
 		
 	}
 	
@@ -1585,9 +1637,9 @@ class _Fabscript_Var_Decl_Rule extends Bovinus_Rule {
 	
 	private function _sub_2_1() {
 		
-		global $Fabscript_KEY_22;
+		global $Fabscript_KEY_24;
 		
-		return bovinus_tokenNode($Fabscript_KEY_22);
+		return bovinus_tokenNode($Fabscript_KEY_24);
 		
 	}
 	
@@ -1736,9 +1788,9 @@ class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_18;
+		global $Fabscript_KEY_20;
 		
-		return bovinus_tokenNode($Fabscript_KEY_18);
+		return bovinus_tokenNode($Fabscript_KEY_20);
 		
 	}
 	
@@ -2019,9 +2071,9 @@ class _Fabscript_Range_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_2() {
 		
-		global $Fabscript_KEY_26;
+		global $Fabscript_KEY_28;
 		
-		return bovinus_tokenNode($Fabscript_KEY_26);
+		return bovinus_tokenNode($Fabscript_KEY_28);
 		
 	}
 	
@@ -2076,9 +2128,9 @@ class _Fabscript_Range_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_4() {
 		
-		global $Fabscript_KEY_24;
+		global $Fabscript_KEY_26;
 		
-		return bovinus_tokenNode($Fabscript_KEY_24);
+		return bovinus_tokenNode($Fabscript_KEY_26);
 		
 	}
 	
@@ -2530,9 +2582,9 @@ class _Fabscript_Disjunction_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_2_1_1() {
 		
-		global $Fabscript_KEY_23;
+		global $Fabscript_KEY_25;
 		
-		return bovinus_tokenNode($Fabscript_KEY_23);
+		return bovinus_tokenNode($Fabscript_KEY_25);
 		
 	}
 	
@@ -2613,9 +2665,9 @@ class _Fabscript_Condition_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1_1_1() {
 		
-		global $Fabscript_KEY_25;
+		global $Fabscript_KEY_27;
 		
-		return bovinus_tokenNode($Fabscript_KEY_25, 'neg');
+		return bovinus_tokenNode($Fabscript_KEY_27, 'neg');
 		
 	}
 	
@@ -2756,9 +2808,9 @@ class _Fabscript_Conjunction_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_2_1_1() {
 		
-		global $Fabscript_KEY_24;
+		global $Fabscript_KEY_26;
 		
-		return bovinus_tokenNode($Fabscript_KEY_24);
+		return bovinus_tokenNode($Fabscript_KEY_26);
 		
 	}
 	
@@ -2794,7 +2846,6 @@ class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
 		
 		// edit-section if_begin-transform {
 
-		//$res = new Bovinus_AstNode($astNode->getName());
 		$child = $astNode->getChildAccess();
 
 		if ($child->if) {
@@ -2845,9 +2896,9 @@ class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1_1_1() {
 		
-		global $Fabscript_KEY_12;
+		global $Fabscript_KEY_14;
 		
-		return bovinus_tokenNode($Fabscript_KEY_12, 'if');
+		return bovinus_tokenNode($Fabscript_KEY_14, 'if');
 		
 	}
 	
@@ -2859,9 +2910,9 @@ class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1_2_1() {
 		
-		global $Fabscript_KEY_13;
+		global $Fabscript_KEY_15;
 		
-		return bovinus_tokenNode($Fabscript_KEY_13, 'elseif');
+		return bovinus_tokenNode($Fabscript_KEY_15, 'elseif');
 		
 	}
 	
@@ -2889,17 +2940,17 @@ class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_5() {
 		
-		global $Fabscript_KEY_14;
+		global $Fabscript_KEY_16;
 		
-		return bovinus_tokenNode($Fabscript_KEY_14);
+		return bovinus_tokenNode($Fabscript_KEY_16);
 		
 	}
 	
 	private function _sub_1_6() {
 		
-		global $Fabscript_KEY_15;
+		global $Fabscript_KEY_17;
 		
-		return bovinus_tokenNode($Fabscript_KEY_15);
+		return bovinus_tokenNode($Fabscript_KEY_17);
 		
 	}
 	
@@ -3230,6 +3281,97 @@ class _Fabscript_Loop_Begin_Rule extends Bovinus_Rule {
 	
 }
 
+class _Fabscript_While_Begin_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('while_begin', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section while_begin-transform {
+
+		$res = new Bovinus_AstNode($astNode->getName());
+
+		$child = $astNode->getChildAccess();
+
+		$condition = $child->cond;
+		$condition->setId('');
+		$res->addChild($condition);
+
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		array_push($elements, $this->_sub_1_4());
+		array_push($elements, $this->_sub_1_5());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_12;
+		
+		return bovinus_tokenNode($Fabscript_KEY_12);
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_BRACE_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		return new _Fabscript_Disjunction_Rule('cond');
+		
+	}
+	
+	private function _sub_1_4() {
+		
+		global $Fabscript_BRACE_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
+		
+	}
+	
+	private function _sub_1_5() {
+		
+		global $Fabscript_KEY_9;
+		
+		return bovinus_tokenNode($Fabscript_KEY_9);
+		
+	}
+	
+	// edit-section while_begin-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
 class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 
 	public function __construct() {
@@ -3252,6 +3394,8 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 		$start->connect($this->_sub_8())->connect($end);
 		$start->connect($this->_sub_9())->connect($end);
 		$start->connect($this->_sub_10())->connect($end);
+		$start->connect($this->_sub_11())->connect($end);
+		$start->connect($this->_sub_12())->connect($end);
 		
 	}
 	
@@ -3300,7 +3444,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_3_1() {
 		
-		return new _Fabscript_If_Begin_Rule();
+		return new _Fabscript_While_Begin_Rule();
 		
 	}
 	
@@ -3312,7 +3456,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_4_1() {
 		
-		return new _Fabscript_Else_Rule();
+		return new _Fabscript_While_End_Rule();
 		
 	}
 	
@@ -3324,7 +3468,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_5_1() {
 		
-		return new _Fabscript_If_End_Rule();
+		return new _Fabscript_If_Begin_Rule();
 		
 	}
 	
@@ -3336,7 +3480,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_6_1() {
 		
-		return new _Fabscript_Case_Begin_Rule();
+		return new _Fabscript_Else_Rule();
 		
 	}
 	
@@ -3348,7 +3492,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_7_1() {
 		
-		return new _Fabscript_Case_Branch_Rule();
+		return new _Fabscript_If_End_Rule();
 		
 	}
 	
@@ -3360,7 +3504,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_8_1() {
 		
-		return new _Fabscript_Case_End_Rule();
+		return new _Fabscript_Case_Begin_Rule();
 		
 	}
 	
@@ -3372,7 +3516,7 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_9_1() {
 		
-		return new _Fabscript_Var_Decl_Rule();
+		return new _Fabscript_Case_Branch_Rule();
 		
 	}
 	
@@ -3383,6 +3527,30 @@ class _Fabscript_Command_Grammar extends Bovinus_Grammar {
 	}
 	
 	private function _sub_10_1() {
+		
+		return new _Fabscript_Case_End_Rule();
+		
+	}
+	
+	private function _sub_11() {
+		
+		return $this->_sub_11_1();
+		
+	}
+	
+	private function _sub_11_1() {
+		
+		return new _Fabscript_Var_Decl_Rule();
+		
+	}
+	
+	private function _sub_12() {
+		
+		return $this->_sub_12_1();
+		
+	}
+	
+	private function _sub_12_1() {
 		
 		return new _Fabscript_Assign_Rule();
 		

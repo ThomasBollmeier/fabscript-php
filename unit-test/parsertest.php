@@ -32,6 +32,14 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
 
     }
 
+    public function testWhile() {
+
+        $this->_parse("while [ i < 10 ] do");
+        $this->_parse("while [ iter.hasNext() ] do");
+        $this->_parse("endwhile");
+
+    }
+
     public function testIf() {
 
         $this->_parse("if [ hasTodo == ( isOpen(item) or item.status <> Status.RELEASED ) ] then begin" );

@@ -49,6 +49,9 @@ class Fabscript_Interpreter {
 			case "loop_begin":
 				return $this->interpret_loop_begin($ast);
 
+			case "while_begin":
+				return $this->interpret_while_begin($ast);
+
 			case "if_begin":
 				return $this->interpret_if_begin($ast);
 			case "elseif":
@@ -105,6 +108,16 @@ class Fabscript_Interpreter {
 		}
 
 		return new Fabscript_Loop($table, $line, $key, $filter);
+
+	}
+
+	private function interpret_while_begin($ast) {
+
+		$children = $ast->getChildren();
+		$conditionNode = $children[0];
+		$condition = $this->convertToLogicalExpr($this->interpret($conditionNode));
+
+		return new Fabscript_WhileLoop($condition);
 
 	}
 

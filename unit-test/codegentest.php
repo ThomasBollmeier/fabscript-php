@@ -77,6 +77,32 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testWhileLoop() {
+
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine(":> define i = 0");
+		$stream->addLine(":> while [ i < 4 ] do");
+		$stream->addLine(":>   case i in");
+		$stream->addLine(":>     0)");
+		$stream->addLine("eins");
+		$stream->addLine(":>     1)");
+		$stream->addLine("zwei");
+		$stream->addLine(":>     2)");
+		$stream->addLine("drei");
+		$stream->addLine(":>     *)");
+		$stream->addLine("ganz viele");
+		$stream->addLine(":>   endcase");
+		$stream->addLine(":>   i = i + 1");
+		$stream->addLine(":> endwhile");
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(4, count($lines));
+		$this->showLines($lines);
+
+	}
+
 	public function testBranch() {
 
 		$employees = array( "A1" => "Meier", "A2" => "Müller", "A3" => "Schulze", "A4" => "Kalkreuth", "A5" => "Itzenplitz" );
