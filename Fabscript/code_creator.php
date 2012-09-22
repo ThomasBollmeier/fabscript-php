@@ -31,6 +31,12 @@ function fabscript_addText($templatePath, $globalVars) {
 
 }
 
+function fabscript_setTemplateDirs($searchDirs = array(".")) {
+
+	Fabscript_Preprocessor::$searchDirs = $searchDirs;
+
+}
+
 class Fabscript_CodeCreator {
 
 	public function __construct() {

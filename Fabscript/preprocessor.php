@@ -29,6 +29,8 @@ class Fabscript_LineType {
 
 class Fabscript_Preprocessor {
 
+	public static $searchDirs = array(".");
+
 	public function __construct() {
 
 	}
@@ -120,11 +122,11 @@ class Fabscript_Preprocessor {
 
 		if (preg_match($this->regexIncludeLine, $line, $matches) === 1) {
 
-			$includePath = $matches[1];
+			$includeName = $matches[1];
 
 			return array(
 				'lineType' => Fabscript_LineType::INCLUDE_LINE,
-				'content' => $includePath
+				'content' => $includeName
 				);
 
 		}
@@ -149,7 +151,9 @@ class Fabscript_Preprocessor {
 
 	}
 
-	private function getIncludeInfo($includePath) {
+	private function getIncludeInfo($includeName) {
+
+		$includePath = $this->getInclPath($includeName);
 
 		if (array_key_exists($includePath, $this->includes)) {
 			return $this->includes[$includePath];
@@ -162,6 +166,19 @@ class Fabscript_Preprocessor {
 		$this->includes[$includePath] = $res;
 
 		return $res;
+
+	}
+
+	private function getInclPath($includeName) {
+
+		foreach (Fabscript_Preprocessor::$searchDirs as $dir) {
+			$path = $dir . DIRECTORY_SEPARATOR . $includeName;
+			if (file_exists($path)) {
+				return $path;
+			}
+		}
+
+		return "";
 
 	}
 
