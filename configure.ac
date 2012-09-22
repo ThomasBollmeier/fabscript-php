@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([fabscript-php], [0.4.4], [tbollmeier@web.de])
+AC_INIT([fabscript-php], [0.4.5], [tbollmeier@web.de])
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([1.11])

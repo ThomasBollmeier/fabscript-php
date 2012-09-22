@@ -1,0 +1,3 @@
+:> for all items do
+${items}
+:> endfor

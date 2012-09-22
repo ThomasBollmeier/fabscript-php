@@ -23,6 +23,7 @@ class Fabscript_LineType {
 
 	const COMMAND = 1;
 	const RAWLINE = 2;
+	const INCLUDE_LINE = 3;
 
 }
 
@@ -49,7 +50,9 @@ class Fabscript_Preprocessor {
 				$parseResult = $this->parseLine($line);
 				$content = $parseResult['content'];
 
-				if ($parseResult['lineType'] == Fabscript_LineType::COMMAND) {
+				switch ($parseResult['lineType']) {
+
+				case Fabscript_LineType::COMMAND:
 
 					if ($content[strlen($content)-1] == $this->lineContinueChar) {
 
@@ -65,9 +68,17 @@ class Fabscript_Preprocessor {
 					
 					}
 
-				} else {
+					break;
+
+				case Fabscript_LineType::RAWLINE:
 
 					$res[] = $parseResult;
+					break;
+
+				case Fabscript_LineType::INCLUDE_LINE:
+
+					$res = array_merge($res, $this->getIncludeInfo($content));
+					break;
 
 				}
 
@@ -107,6 +118,17 @@ class Fabscript_Preprocessor {
 
 	private function parseLine($line) {
 
+		if (preg_match($this->regexIncludeLine, $line, $matches) === 1) {
+
+			$includePath = $matches[1];
+
+			return array(
+				'lineType' => Fabscript_LineType::INCLUDE_LINE,
+				'content' => $includePath
+				);
+
+		}
+
 		if (preg_match($this->regexCmdLine, $line, $matches) === 1) {
 
 			$content = trim($matches[1]);
@@ -127,8 +149,26 @@ class Fabscript_Preprocessor {
 
 	}
 
+	private function getIncludeInfo($includePath) {
+
+		if (array_key_exists($includePath, $this->includes)) {
+			return $this->includes[$includePath];
+		} 
+
+		$stream = new Fabscript_FileInput($includePath);
+
+		$res = $this->getLineInfo($stream);
+
+		$this->includes[$includePath] = $res;
+
+		return $res;
+
+	}
+
+	private $regexIncludeLine = '/^[[:blank:]]*:>[[:blank:]]*include[[:blank:]]+"(.+)"/';
 	private $regexCmdLine = '/^[[:blank:]]*:>(.+)/';
 	private $lineContinueChar = '\\';
+	private $includes = array();
 
 }
 

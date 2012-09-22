@@ -247,6 +247,23 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testInclude() {
+
+		$this->creator->setGlobalVar("items", array("eins", "zwei", "drei"));
+
+		$stream = new Fabscript_StringsInput();
+		$stream->addLine('----- Anfang -----');
+		$stream->addLine(':> include "items.template"');
+		$stream->addLine('----- Ende -----');
+
+		$this->creator->processTemplate($stream);
+
+		$lines = $this->creator->getLines();
+		$this->assertEquals(5, count($lines));
+		$this->showLines($lines);
+
+	}
+
 	private function showLines($lines) {
 
 		echo "\n";
