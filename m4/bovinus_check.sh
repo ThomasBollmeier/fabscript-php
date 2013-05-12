@@ -17,7 +17,7 @@ function split () {
 	
 }
 
-bovinus_info=`bovinus --version 2>/dev/null`
+bovinus_info=`python3 -c "import bovinus; print(bovinus.VERSION)"`
 if [ -z "$bovinus_info" ]; then
 	echo ""
 	exit 2

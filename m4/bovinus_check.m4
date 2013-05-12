@@ -16,7 +16,7 @@ AC_DEFUN([FABSCRIPT_CHECK_FOR_BOVINUS],[
 		;;
 		2)
 		AC_MSG_RESULT([no])
-		AC_MSG_ERROR([bovinus parser library is needed for faber-scriptorum (see https://code.launchpad.net/~tbollmeier/bovinus-python/master)])
+		AC_MSG_ERROR([bovinus parser library is needed for faber-scriptorum (see https://github.com/ThomasBollmeier/bovinus)])
 		;;
 	esac
 	
