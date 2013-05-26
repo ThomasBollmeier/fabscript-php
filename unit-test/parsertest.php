@@ -83,6 +83,20 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->_parse("eleven = sum(1,(6-2)) + 1");
 
     }
+    
+    public function testSnippet() {
+        
+        $this->_parse("snippet mySnippet()");
+        $this->_parse("snippet mySnippet(arg1)");
+        $this->_parse("snippet mySnippet(arg1, arg2)");
+        $this->_parse("endsnippet");
+        
+        $this->_parse("paste snippet mySnippet()");
+        $this->_parse("paste snippet mySnippet('test')");
+        $this->_parse("paste snippet mySnippet('test') indent by 1");
+        $this->_parse("paste snippet mySnippet(myName, myFunc()) indent by current_level");
+        
+    }
 
     private function _parse($code) {
 

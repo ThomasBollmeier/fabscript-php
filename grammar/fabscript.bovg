@@ -36,7 +36,10 @@ command =
 	case_branch |
 	case_end |
 	var_decl |
-	assign
+	assign |
+	snippet_begin |
+	snippet_end |
+        paste_snippet
 	;
 
 @grammar
@@ -93,6 +96,64 @@ var_decl =
 assign = 
 	name=var_name ASSIGN value=expr
 	;
+
+snippet_begin = 'snippet' name=ID PAR_OPEN ( param=ID ( COMMA param=ID )* )? PAR_CLOSE;
+
+% snippet_begin {
+
+$res = new Bovinus_AstNode('snippet_begin');
+
+$name = $astNode->getChildById('name')->getText();
+$res->addChild(new Bovinus_AstNode('name', $name));
+
+$paramNodes = $astNode->getChildrenById('param');
+foreach ($paramNodes as $paramNode) {
+    $res->addChild(new Bovinus_AstNode('param', $paramNode->getText()));
+}
+
+return $res;
+
+% }
+
+snippet_end = 'endsnippet';
+
+% snippet_end {
+
+return new Bovinus_AstNode('snippet_end');
+
+% } 
+
+paste_snippet =	
+    'paste' 'snippet' name=ID PAR_OPEN ( arg=expr (COMMA arg=expr)* )? PAR_CLOSE ('indent' 'by' indent=expr )?;
+
+% paste_snippet {
+
+$res = new Bovinus_AstNode('paste_snippet');
+
+$name = $astNode->getChildById('name')->getText();
+$res->addChild(new Bovinus_AstNode('name', $name));
+
+$indentLevel = $astNode->getChildById('indent');
+if ($indentLevel != null) {
+    $indentLevel->setId('');
+    $indent = new Bovinus_AstNode('indent_by');
+    $indent->addChild($indentLevel);
+    $res->addChild($indent);
+}
+
+$argNodes = $astNode->getChildrenById('arg');
+if (count($argNodes) > 0) {
+    $args = new Bovinus_AstNode('arguments');
+    $res->addChild($args);
+    foreach ($argNodes as $argNode) {
+        $argNode->setId('');
+        $args->addChild($argNode);
+    }
+}
+
+return $res;
+
+% }
 
 disjunction = 
 	part=conjunction ( 'or' part=conjunction )*

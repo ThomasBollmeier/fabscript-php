@@ -18,3 +18,4 @@ unit-test/Makefile
 unit-test/Makefile.in
 dist/
 *.tar.gz
+nbproject
