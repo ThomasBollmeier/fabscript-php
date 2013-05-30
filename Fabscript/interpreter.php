@@ -21,6 +21,7 @@ require_once 'Fabscript/parser.php';
 require_once 'Fabscript/expression.php';
 require_once 'Fabscript/logical_expression.php';
 require_once 'Fabscript/block.php';
+require_once 'Fabscript/snippet.php';
 
 class Fabscript_Interpreter {
 
@@ -66,6 +67,12 @@ class Fabscript_Interpreter {
 				return $this->interpret_var_declaration($ast);
 			case "assign":
 				return $this->interpret_assignment($ast);
+
+            case "snippet_begin":
+                return $this->interpret_snippet_begin($ast);
+
+            case "paste_snippet":
+                return $this->interpret_paste_snippet($ast);
 
 			default:
 				throw new Exception("Interpreter error: '" . $ast->getName() . "'");
@@ -160,6 +167,47 @@ class Fabscript_Interpreter {
 		return $res;
 
 	}
+
+    private function interpret_snippet_begin($ast) {
+
+        $res = new Fabscript_SnippetFactory($ast->getChild("name")->getText());
+
+        $paramNodes = $ast->getChildrenByName("param");
+        foreach ($paramNodes as $paramNode) {
+            $res->addParameter($paramNode->getText());
+        }
+
+        return $res;
+
+    }
+
+    private function interpret_paste_snippet($ast) {
+
+        $res = array();
+
+        $res["name"] = $ast->getChild("name")->getText();
+
+        $arguments = array();
+        $argsNode = $ast->getChild("arguments");
+        if ($argsNode) {
+            $argNodes = $argsNode->getChildren();
+            foreach ($argNodes as $argNode) {
+                array_push($arguments, $this->interpret_expr($argNode));
+            }
+        }
+        $res["arguments"] = $arguments;
+
+        $indent_by = $ast->getChild("indent_by");
+        if ($indent_by) {
+            $children = $indent_by->getChildren();
+            $res["indentLevel"] = $this->interpret_expr($children[0]);
+        } else {
+            $res["indentLevel"] =null;
+        }
+
+        return $res;
+
+    }
 
 	private function interpret_logical_expr($ast) {
 

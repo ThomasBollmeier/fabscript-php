@@ -32,11 +32,11 @@ function fabscript_literal($tokenNode) {
 
 // } edit-section-end
 
-class Fabscript_Command_Parser extends Bovinus_Parser {
+class Fabscript_Symbol_Parser extends Bovinus_Parser {
 
 	public function __construct() {
 		
-		parent::__construct(new _Fabscript_Command_Grammar());
+		parent::__construct(new _Fabscript_Symbol_Grammar());
 		
 		$this->enableLineComments('#');
 		$this->enableFullBacktracking(TRUE);
@@ -44,11 +44,11 @@ class Fabscript_Command_Parser extends Bovinus_Parser {
 	}
 }
 
-class Fabscript_Symbol_Parser extends Bovinus_Parser {
+class Fabscript_Command_Parser extends Bovinus_Parser {
 
 	public function __construct() {
 		
-		parent::__construct(new _Fabscript_Symbol_Grammar());
+		parent::__construct(new _Fabscript_Command_Grammar());
 		
 		$this->enableLineComments('#');
 		$this->enableFullBacktracking(TRUE);
@@ -219,6 +219,249 @@ array_push($Fabscript_all_token_types, $Fabscript_KEY_34);
 $Fabscript_KEY_35 = new Bovinus_Keyword('FALSE', TRUE);
 array_push($Fabscript_all_token_types, $Fabscript_KEY_35);
 
+class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('loop_end', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		$start->connect($this->_sub_2())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section loop_end-transform {
+		
+		return new Bovinus_AstNode($astNode->getName());
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_10;
+		
+		return bovinus_tokenNode($Fabscript_KEY_10);
+		
+	}
+	
+	private function _sub_2() {
+		
+		return $this->_sub_2_1();
+		
+	}
+	
+	private function _sub_2_1() {
+		
+		global $Fabscript_KEY_11;
+		
+		return bovinus_tokenNode($Fabscript_KEY_11);
+		
+	}
+	
+	// edit-section loop_end-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Else_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('else', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section else-transform {
+		
+		return new Bovinus_AstNode($astNode->getName());
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_18;
+		
+		return bovinus_tokenNode($Fabscript_KEY_18);
+		
+	}
+	
+	// edit-section else-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Snippet_End_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('snippet_end', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		
+		return new Bovinus_AstNode('snippet_end');
+		
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_26;
+		
+		return bovinus_tokenNode($Fabscript_KEY_26);
+		
+	}
+	
+	// edit-section snippet_end-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Case_End_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('case_end', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section case_end-transform {
+		
+		return new Bovinus_AstNode($astNode->getName());
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_22;
+		
+		return bovinus_tokenNode($Fabscript_KEY_22);
+		
+	}
+	
+	// edit-section case_end-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_If_End_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('if_end', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section if_end-transform {
+		
+		return new Bovinus_AstNode($astNode->getName());
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_19;
+		
+		return bovinus_tokenNode($Fabscript_KEY_19);
+		
+	}
+	
+	// edit-section if_end-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
 class _Fabscript_Snippet_Begin_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
@@ -353,254 +596,6 @@ class _Fabscript_Snippet_Begin_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section snippet_begin-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_If_End_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('if_end', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section if_end-transform {
-		
-		return new Bovinus_AstNode($astNode->getName());
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_19;
-		
-		return bovinus_tokenNode($Fabscript_KEY_19);
-		
-	}
-	
-	// edit-section if_end-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Var_Name_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('var_name', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section var_name-transform {
-
-		$children = $astNode->getChildren();
-		$res = new Bovinus_AstNode($astNode->getName(), $children[0]->getText());
-		
-		return $res;
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_ID;
-		
-		return bovinus_tokenNode($Fabscript_ID);
-		
-	}
-	
-	// edit-section var_name-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Boolean_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('boolean', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		$start->connect($this->_sub_2())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section boolean-transform {
-
-		$children = $astNode->getChildren();
-		
-		return new Bovinus_AstNode($astNode->getName(), $children[0]->getText());
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_34;
-		
-		return bovinus_tokenNode($Fabscript_KEY_34);
-		
-	}
-	
-	private function _sub_2() {
-		
-		return $this->_sub_2_1();
-		
-	}
-	
-	private function _sub_2_1() {
-		
-		global $Fabscript_KEY_35;
-		
-		return bovinus_tokenNode($Fabscript_KEY_35);
-		
-	}
-	
-	// edit-section boolean-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Snippet_End_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('snippet_end', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		
-		return new Bovinus_AstNode('snippet_end');
-		
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_26;
-		
-		return bovinus_tokenNode($Fabscript_KEY_26);
-		
-	}
-	
-	// edit-section snippet_end-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Case_End_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('case_end', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section case_end-transform {
-		
-		return new Bovinus_AstNode($astNode->getName());
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_22;
-		
-		return bovinus_tokenNode($Fabscript_KEY_22);
-		
-	}
-	
-	// edit-section case_end-further-private-methods {
 	
 	// add your methods here...
 	
@@ -746,11 +741,11 @@ class _Fabscript_Number_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Else_Rule extends Bovinus_Rule {
+class _Fabscript_Var_Name_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
 	
-		parent::__construct('else', $identifier);
+		parent::__construct('var_name', $identifier);
 		
 	}
 	
@@ -762,9 +757,12 @@ class _Fabscript_Else_Rule extends Bovinus_Rule {
 	
 	public function transform($astNode) {
 		
-		// edit-section else-transform {
+		// edit-section var_name-transform {
+
+		$children = $astNode->getChildren();
+		$res = new Bovinus_AstNode($astNode->getName(), $children[0]->getText());
 		
-		return new Bovinus_AstNode($astNode->getName());
+		return $res;
 		
 		// } edit-section-end
 		
@@ -778,13 +776,13 @@ class _Fabscript_Else_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_18;
+		global $Fabscript_ID;
 		
-		return bovinus_tokenNode($Fabscript_KEY_18);
+		return bovinus_tokenNode($Fabscript_ID);
 		
 	}
 	
-	// edit-section else-further-private-methods {
+	// edit-section var_name-further-private-methods {
 	
 	// add your methods here...
 	
@@ -838,11 +836,11 @@ class _Fabscript_While_End_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
+class _Fabscript_Boolean_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
 	
-		parent::__construct('loop_end', $identifier);
+		parent::__construct('boolean', $identifier);
 		
 	}
 	
@@ -855,9 +853,11 @@ class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
 	
 	public function transform($astNode) {
 		
-		// edit-section loop_end-transform {
+		// edit-section boolean-transform {
+
+		$children = $astNode->getChildren();
 		
-		return new Bovinus_AstNode($astNode->getName());
+		return new Bovinus_AstNode($astNode->getName(), $children[0]->getText());
 		
 		// } edit-section-end
 		
@@ -871,9 +871,9 @@ class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_KEY_10;
+		global $Fabscript_KEY_34;
 		
-		return bovinus_tokenNode($Fabscript_KEY_10);
+		return bovinus_tokenNode($Fabscript_KEY_34);
 		
 	}
 	
@@ -885,13 +885,13 @@ class _Fabscript_Loop_End_Rule extends Bovinus_Rule {
 	
 	private function _sub_2_1() {
 		
-		global $Fabscript_KEY_11;
+		global $Fabscript_KEY_35;
 		
-		return bovinus_tokenNode($Fabscript_KEY_11);
+		return bovinus_tokenNode($Fabscript_KEY_35);
 		
 	}
 	
-	// edit-section loop_end-further-private-methods {
+	// edit-section boolean-further-private-methods {
 	
 	// add your methods here...
 	
@@ -1003,11 +1003,11 @@ class _Fabscript_Expr_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Path_Element_Rule extends Bovinus_Rule {
+class _Fabscript_Operand_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
 	
-		parent::__construct('path_element', $identifier);
+		parent::__construct('operand', $identifier);
 		
 	}
 	
@@ -1016,353 +1016,34 @@ class _Fabscript_Path_Element_Rule extends Bovinus_Rule {
 		$start->connect($this->_sub_1())->connect($end);
 		$start->connect($this->_sub_2())->connect($end);
 		$start->connect($this->_sub_3())->connect($end);
+		$start->connect($this->_sub_4())->connect($end);
+		$start->connect($this->_sub_5())->connect($end);
 		
 	}
 	
 	public function transform($astNode) {
 		
-		// edit-section path_element-transform {
+		// edit-section operand-transform {
 
 		$children = $astNode->getChildren();
 
 		if (count($children) == 1) {
-			
-			$children[0]->setId('');
-			return $children[0];
+
+			$res = $children[0];
+
+			if ($res->getName() == "token") {
+				$res = fabscript_literal($res);
+			}
+
+			return $res;
 
 		} else {
 
-			$res = new Bovinus_AstNode('list-element');
-
-			$child = $astNode->getChildAccess();
-			$res->addChild($child->list);
-
-			foreach ($astNode->getChildrenById('index') as $index) {
-				$res->addChild($index);
-			}
-			
-			return $res;
+			return $children[1];
 
 		}
 		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		return $this->_sub_1_1();
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		return new _Fabscript_Call_Rule('call');
-		
-	}
-	
-	private function _sub_2() {
-		
-		return $this->_sub_2_1();
-		
-	}
-	
-	private function _sub_2_1() {
-		
-		return new _Fabscript_Var_Name_Rule('var');
-		
-	}
-	
-	private function _sub_3() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_3_1());
-		array_push($elements, $this->_sub_3_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_3_1() {
-		
-		$branches = array();
-		array_push($branches, $this->_sub_3_1_1());
-		array_push($branches, $this->_sub_3_1_2());
-		
-		return new Bovinus_Fork($branches);
-		
-	}
-	
-	private function _sub_3_1_1() {
-		
-		return $this->_sub_3_1_1_1();
-		
-	}
-	
-	private function _sub_3_1_1_1() {
-		
-		return new _Fabscript_Call_Rule('list');
-		
-	}
-	
-	private function _sub_3_1_2() {
-		
-		return $this->_sub_3_1_2_1();
-		
-	}
-	
-	private function _sub_3_1_2_1() {
-		
-		return new _Fabscript_Var_Name_Rule('list');
-		
-	}
-	
-	private function _sub_3_2() {
-		
-		return bovinus_one_to_many($this->_sub_3_2_1());
-		
-	}
-	
-	private function _sub_3_2_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_3_2_1_1());
-		array_push($elements, $this->_sub_3_2_1_2());
-		array_push($elements, $this->_sub_3_2_1_3());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_3_2_1_1() {
-		
-		global $Fabscript_BRACE_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
-		
-	}
-	
-	private function _sub_3_2_1_2() {
-		
-		return new _Fabscript_Expr_Rule('index');
-		
-	}
-	
-	private function _sub_3_2_1_3() {
-		
-		global $Fabscript_BRACE_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
-		
-	}
-	
-	// edit-section path_element-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Call_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('call', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section call-transform {
-
-		$res = new Bovinus_AstNode($astNode->getName());
-		$child = $astNode->getChildAccess();
-
-		$name = new Bovinus_AstNode('name', $child->name->getText());
-		$res->addChild($name);
-
-		$args = $child->arg;
-		if ($args) {
-			if ( !is_array($args) ) {
-				$args->setId('');
-				$res->addChild($args);
-			} else {
-				foreach ($args as $arg) {
-					$arg->setId('');
-					$res->addChild($arg);
-				}
-			}
-		}
-		
-		return $res;
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_ID;
-		
-		return bovinus_tokenNode($Fabscript_ID, 'name');
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		$branches = array();
-		array_push($branches, $this->_sub_1_2_1());
-		array_push($branches, $this->_sub_1_2_2());
-		
-		return new Bovinus_Fork($branches);
-		
-	}
-	
-	private function _sub_1_2_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_2_1_1());
-		array_push($elements, $this->_sub_1_2_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_2_1_1() {
-		
-		global $Fabscript_PAR_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_PAR_OPEN);
-		
-	}
-	
-	private function _sub_1_2_1_2() {
-		
-		global $Fabscript_PAR_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
-		
-	}
-	
-	private function _sub_1_2_2() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_2_2_1());
-		array_push($elements, $this->_sub_1_2_2_2());
-		array_push($elements, $this->_sub_1_2_2_3());
-		array_push($elements, $this->_sub_1_2_2_4());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_2_2_1() {
-		
-		global $Fabscript_PAR_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_PAR_OPEN);
-		
-	}
-	
-	private function _sub_1_2_2_2() {
-		
-		return new _Fabscript_Expr_Rule('arg');
-		
-	}
-	
-	private function _sub_1_2_2_3() {
-		
-		return bovinus_zero_to_many($this->_sub_1_2_2_3_1());
-		
-	}
-	
-	private function _sub_1_2_2_3_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_2_2_3_1_1());
-		array_push($elements, $this->_sub_1_2_2_3_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_2_2_3_1_1() {
-		
-		global $Fabscript_COMMA;
-		
-		return bovinus_tokenNode($Fabscript_COMMA);
-		
-	}
-	
-	private function _sub_1_2_2_3_1_2() {
-		
-		return new _Fabscript_Expr_Rule('arg');
-		
-	}
-	
-	private function _sub_1_2_2_4() {
-		
-		global $Fabscript_PAR_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
-		
-	}
-	
-	// edit-section call-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Assign_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('assign', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section assign-transform {
-		
-		$res = new Bovinus_AstNode($astNode->getName());
-		$child = $astNode->getChildAccess();
-
-		$name = $child->name;
-		$name->setId('');
-		$res->addChild($name);
-
-		$val = $child->value;
-		$val->setId('');
-		$res->addChild($val);
-		
-		return $res;
+		return $astNode;
 		
 		// } edit-section-end
 		
@@ -1381,25 +1062,77 @@ class _Fabscript_Assign_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		return new _Fabscript_Var_Name_Rule('name');
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
 		
 	}
 	
 	private function _sub_1_2() {
 		
-		global $Fabscript_ASSIGN;
-		
-		return bovinus_tokenNode($Fabscript_ASSIGN);
+		return new _Fabscript_Expr_Rule();
 		
 	}
 	
 	private function _sub_1_3() {
 		
-		return new _Fabscript_Expr_Rule('value');
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
 		
 	}
 	
-	// edit-section assign-further-private-methods {
+	private function _sub_2() {
+		
+		return $this->_sub_2_1();
+		
+	}
+	
+	private function _sub_2_1() {
+		
+		global $Fabscript_LIT;
+		
+		return bovinus_tokenNode($Fabscript_LIT);
+		
+	}
+	
+	private function _sub_3() {
+		
+		return $this->_sub_3_1();
+		
+	}
+	
+	private function _sub_3_1() {
+		
+		return new _Fabscript_Number_Rule();
+		
+	}
+	
+	private function _sub_4() {
+		
+		return $this->_sub_4_1();
+		
+	}
+	
+	private function _sub_4_1() {
+		
+		return new _Fabscript_Boolean_Rule();
+		
+	}
+	
+	private function _sub_5() {
+		
+		return $this->_sub_5_1();
+		
+	}
+	
+	private function _sub_5_1() {
+		
+		return new _Fabscript_Path_Rule();
+		
+	}
+	
+	// edit-section operand-further-private-methods {
 	
 	// add your methods here...
 	
@@ -1496,139 +1229,6 @@ class _Fabscript_Path_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section path-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Case_Branch_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('case_branch', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section case_branch-transform {
-
-		$children = $astNode->getChildren();
-
-		if ($children[0]->getId() != 'default') {
-			$res = new Bovinus_AstNode($astNode->getName());
-			foreach ($children as $child) {
-				if ($child->getId() == 'expr') {
-					$child->setId('');
-					$res->addChild($child);		
-				}
-			}
-			return $res;
-		} else {
-			return new Bovinus_AstNode('default_branch');
-		}
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		$branches = array();
-		array_push($branches, $this->_sub_1_1_1());
-		array_push($branches, $this->_sub_1_1_2());
-		
-		return new Bovinus_Fork($branches);
-		
-	}
-	
-	private function _sub_1_1_1() {
-		
-		return $this->_sub_1_1_1_1();
-		
-	}
-	
-	private function _sub_1_1_1_1() {
-		
-		global $Fabscript_KEY_21;
-		
-		return bovinus_tokenNode($Fabscript_KEY_21, 'default');
-		
-	}
-	
-	private function _sub_1_1_2() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1_2_1());
-		array_push($elements, $this->_sub_1_1_2_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1_2_1() {
-		
-		return new _Fabscript_Expr_Rule('expr');
-		
-	}
-	
-	private function _sub_1_1_2_2() {
-		
-		return bovinus_zero_to_many($this->_sub_1_1_2_2_1());
-		
-	}
-	
-	private function _sub_1_1_2_2_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1_2_2_1_1());
-		array_push($elements, $this->_sub_1_1_2_2_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1_2_2_1_1() {
-		
-		global $Fabscript_COMMA;
-		
-		return bovinus_tokenNode($Fabscript_COMMA);
-		
-	}
-	
-	private function _sub_1_1_2_2_1_2() {
-		
-		return new _Fabscript_Expr_Rule('expr');
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		global $Fabscript_PAR_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
-		
-	}
-	
-	// edit-section case_branch-further-private-methods {
 	
 	// add your methods here...
 	
@@ -1746,11 +1346,11 @@ class _Fabscript_Var_Decl_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Paste_Snippet_Rule extends Bovinus_Rule {
+class _Fabscript_Assign_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
 	
-		parent::__construct('paste_snippet', $identifier);
+		parent::__construct('assign', $identifier);
 		
 	}
 	
@@ -1762,225 +1362,19 @@ class _Fabscript_Paste_Snippet_Rule extends Bovinus_Rule {
 	
 	public function transform($astNode) {
 		
+		// edit-section assign-transform {
 		
-		$res = new Bovinus_AstNode('paste_snippet');
-		
-		$name = $astNode->getChildById('name')->getText();
-		$res->addChild(new Bovinus_AstNode('name', $name));
-		
-		$indentLevel = $astNode->getChildById('indent');
-		if ($indentLevel != null) {
-		    $indentLevel->setId('');
-		    $indent = new Bovinus_AstNode('indent_by');
-		    $indent->addChild($indentLevel);
-		    $res->addChild($indent);
-		}
-		
-		$argNodes = $astNode->getChildrenById('arg');
-		if (count($argNodes) > 0) {
-		    $args = new Bovinus_AstNode('arguments');
-		    $res->addChild($args);
-		    foreach ($argNodes as $argNode) {
-		        $argNode->setId('');
-		        $args->addChild($argNode);
-		    }
-		}
-		
-		return $res;
-		
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		array_push($elements, $this->_sub_1_3());
-		array_push($elements, $this->_sub_1_4());
-		array_push($elements, $this->_sub_1_5());
-		array_push($elements, $this->_sub_1_6());
-		array_push($elements, $this->_sub_1_7());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_27;
-		
-		return bovinus_tokenNode($Fabscript_KEY_27);
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		global $Fabscript_KEY_25;
-		
-		return bovinus_tokenNode($Fabscript_KEY_25);
-		
-	}
-	
-	private function _sub_1_3() {
-		
-		global $Fabscript_ID;
-		
-		return bovinus_tokenNode($Fabscript_ID, 'name');
-		
-	}
-	
-	private function _sub_1_4() {
-		
-		global $Fabscript_PAR_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_PAR_OPEN);
-		
-	}
-	
-	private function _sub_1_5() {
-		
-		return bovinus_zero_to_one($this->_sub_1_5_1());
-		
-	}
-	
-	private function _sub_1_5_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_5_1_1());
-		array_push($elements, $this->_sub_1_5_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_5_1_1() {
-		
-		return new _Fabscript_Expr_Rule('arg');
-		
-	}
-	
-	private function _sub_1_5_1_2() {
-		
-		return bovinus_zero_to_many($this->_sub_1_5_1_2_1());
-		
-	}
-	
-	private function _sub_1_5_1_2_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_5_1_2_1_1());
-		array_push($elements, $this->_sub_1_5_1_2_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_5_1_2_1_1() {
-		
-		global $Fabscript_COMMA;
-		
-		return bovinus_tokenNode($Fabscript_COMMA);
-		
-	}
-	
-	private function _sub_1_5_1_2_1_2() {
-		
-		return new _Fabscript_Expr_Rule('arg');
-		
-	}
-	
-	private function _sub_1_6() {
-		
-		global $Fabscript_PAR_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
-		
-	}
-	
-	private function _sub_1_7() {
-		
-		return bovinus_zero_to_one($this->_sub_1_7_1());
-		
-	}
-	
-	private function _sub_1_7_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_7_1_1());
-		array_push($elements, $this->_sub_1_7_1_2());
-		array_push($elements, $this->_sub_1_7_1_3());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_7_1_1() {
-		
-		global $Fabscript_KEY_28;
-		
-		return bovinus_tokenNode($Fabscript_KEY_28);
-		
-	}
-	
-	private function _sub_1_7_1_2() {
-		
-		global $Fabscript_KEY_29;
-		
-		return bovinus_tokenNode($Fabscript_KEY_29);
-		
-	}
-	
-	private function _sub_1_7_1_3() {
-		
-		return new _Fabscript_Expr_Rule('indent');
-		
-	}
-	
-	// edit-section paste_snippet-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Comparison_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('comparison', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section comparison-transform {
-
 		$res = new Bovinus_AstNode($astNode->getName());
 		$child = $astNode->getChildAccess();
 
-		$node = new Bovinus_AstNode('left');
-		$lhs = $child->lhs;
-		$lhs->setId('');
-		$node->addChild($lhs);
-		$res->addChild($node);
+		$name = $child->name;
+		$name->setId('');
+		$res->addChild($name);
 
-		$node = new Bovinus_AstNode('operator', $child->op->getText());
-		$res->addChild($node);
-
-		$node = new Bovinus_AstNode('right');
-		$rhs = $child->rhs;
-		$rhs->setId('');
-		$node->addChild($rhs);
-		$res->addChild($node);
-
+		$val = $child->value;
+		$val->setId('');
+		$res->addChild($val);
+		
 		return $res;
 		
 		// } edit-section-end
@@ -2000,143 +1394,25 @@ class _Fabscript_Comparison_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		return new _Fabscript_Expr_Rule('lhs');
+		return new _Fabscript_Var_Name_Rule('name');
 		
 	}
 	
 	private function _sub_1_2() {
 		
-		$branches = array();
-		array_push($branches, $this->_sub_1_2_1());
-		array_push($branches, $this->_sub_1_2_2());
-		array_push($branches, $this->_sub_1_2_3());
-		array_push($branches, $this->_sub_1_2_4());
-		array_push($branches, $this->_sub_1_2_5());
-		array_push($branches, $this->_sub_1_2_6());
+		global $Fabscript_ASSIGN;
 		
-		return new Bovinus_Fork($branches);
-		
-	}
-	
-	private function _sub_1_2_1() {
-		
-		return $this->_sub_1_2_1_1();
-		
-	}
-	
-	private function _sub_1_2_1_1() {
-		
-		global $Fabscript_EQ;
-		
-		return bovinus_tokenNode($Fabscript_EQ, 'op');
-		
-	}
-	
-	private function _sub_1_2_2() {
-		
-		return $this->_sub_1_2_2_1();
-		
-	}
-	
-	private function _sub_1_2_2_1() {
-		
-		global $Fabscript_NE;
-		
-		return bovinus_tokenNode($Fabscript_NE, 'op');
-		
-	}
-	
-	private function _sub_1_2_3() {
-		
-		return $this->_sub_1_2_3_1();
-		
-	}
-	
-	private function _sub_1_2_3_1() {
-		
-		global $Fabscript_GT;
-		
-		return bovinus_tokenNode($Fabscript_GT, 'op');
-		
-	}
-	
-	private function _sub_1_2_4() {
-		
-		return $this->_sub_1_2_4_1();
-		
-	}
-	
-	private function _sub_1_2_4_1() {
-		
-		global $Fabscript_GE;
-		
-		return bovinus_tokenNode($Fabscript_GE, 'op');
-		
-	}
-	
-	private function _sub_1_2_5() {
-		
-		return $this->_sub_1_2_5_1();
-		
-	}
-	
-	private function _sub_1_2_5_1() {
-		
-		global $Fabscript_LT;
-		
-		return bovinus_tokenNode($Fabscript_LT, 'op');
-		
-	}
-	
-	private function _sub_1_2_6() {
-		
-		return $this->_sub_1_2_6_1();
-		
-	}
-	
-	private function _sub_1_2_6_1() {
-		
-		global $Fabscript_LE;
-		
-		return bovinus_tokenNode($Fabscript_LE, 'op');
+		return bovinus_tokenNode($Fabscript_ASSIGN);
 		
 	}
 	
 	private function _sub_1_3() {
 		
-		$branches = array();
-		array_push($branches, $this->_sub_1_3_1());
-		array_push($branches, $this->_sub_1_3_2());
-		
-		return new Bovinus_Fork($branches);
+		return new _Fabscript_Expr_Rule('value');
 		
 	}
 	
-	private function _sub_1_3_1() {
-		
-		return $this->_sub_1_3_1_1();
-		
-	}
-	
-	private function _sub_1_3_1_1() {
-		
-		return new _Fabscript_Expr_Rule('rhs');
-		
-	}
-	
-	private function _sub_1_3_2() {
-		
-		return $this->_sub_1_3_2_1();
-		
-	}
-	
-	private function _sub_1_3_2_1() {
-		
-		return new _Fabscript_Disjunction_Rule('rhs');
-		
-	}
-	
-	// edit-section comparison-further-private-methods {
+	// edit-section assign-further-private-methods {
 	
 	// add your methods here...
 	
@@ -2144,11 +1420,13 @@ class _Fabscript_Comparison_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
+class _Fabscript_Symbol_Grammar extends Bovinus_Grammar {
 
-	public function __construct($identifier="") {
+	public function __construct() {
 	
-		parent::__construct('case_begin', $identifier);
+		global $Fabscript_all_token_types;
+		
+		parent::__construct('_Fabscript_Symbol_Grammar', $Fabscript_all_token_types);
 		
 	}
 	
@@ -2160,15 +1438,12 @@ class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
 	
 	public function transform($astNode) {
 		
-		// edit-section case_begin-transform {
-
-		$res = new Bovinus_AstNode($astNode->getName());
+		// edit-section symbol-transform {
 
 		$children = $astNode->getChildren();
-		$children[1]->setId('');
-		$res->addChild($children[1]);
+		$children[0]->setId('');
 		
-		return $res;
+		return $children[0];
 		
 		// } edit-section-end
 		
@@ -2176,38 +1451,17 @@ class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
 	
 	private function _sub_1() {
 		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		array_push($elements, $this->_sub_1_3());
-		
-		return new Bovinus_Sequence($elements);
+		return $this->_sub_1_1();
 		
 	}
 	
 	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_20;
-		
-		return bovinus_tokenNode($Fabscript_KEY_20);
-		
-	}
-	
-	private function _sub_1_2() {
 		
 		return new _Fabscript_Path_Rule();
 		
 	}
 	
-	private function _sub_1_3() {
-		
-		global $Fabscript_KEY_6;
-		
-		return bovinus_tokenNode($Fabscript_KEY_6);
-		
-	}
-	
-	// edit-section case_begin-further-private-methods {
+	// edit-section symbol-further-private-methods {
 	
 	// add your methods here...
 	
@@ -2453,47 +1707,43 @@ class _Fabscript_Range_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Operand_Rule extends Bovinus_Rule {
+class _Fabscript_Comparison_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
 	
-		parent::__construct('operand', $identifier);
+		parent::__construct('comparison', $identifier);
 		
 	}
 	
 	public function expand($start, $end, $context) {
 		
 		$start->connect($this->_sub_1())->connect($end);
-		$start->connect($this->_sub_2())->connect($end);
-		$start->connect($this->_sub_3())->connect($end);
-		$start->connect($this->_sub_4())->connect($end);
-		$start->connect($this->_sub_5())->connect($end);
 		
 	}
 	
 	public function transform($astNode) {
 		
-		// edit-section operand-transform {
+		// edit-section comparison-transform {
 
-		$children = $astNode->getChildren();
+		$res = new Bovinus_AstNode($astNode->getName());
+		$child = $astNode->getChildAccess();
 
-		if (count($children) == 1) {
+		$node = new Bovinus_AstNode('left');
+		$lhs = $child->lhs;
+		$lhs->setId('');
+		$node->addChild($lhs);
+		$res->addChild($node);
 
-			$res = $children[0];
+		$node = new Bovinus_AstNode('operator', $child->op->getText());
+		$res->addChild($node);
 
-			if ($res->getName() == "token") {
-				$res = fabscript_literal($res);
-			}
+		$node = new Bovinus_AstNode('right');
+		$rhs = $child->rhs;
+		$rhs->setId('');
+		$node->addChild($rhs);
+		$res->addChild($node);
 
-			return $res;
-
-		} else {
-
-			return $children[1];
-
-		}
-		
-		return $astNode;
+		return $res;
 		
 		// } edit-section-end
 		
@@ -2512,77 +1762,143 @@ class _Fabscript_Operand_Rule extends Bovinus_Rule {
 	
 	private function _sub_1_1() {
 		
-		global $Fabscript_PAR_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		return new _Fabscript_Expr_Rule('lhs');
 		
 	}
 	
 	private function _sub_1_2() {
 		
-		return new _Fabscript_Expr_Rule();
+		$branches = array();
+		array_push($branches, $this->_sub_1_2_1());
+		array_push($branches, $this->_sub_1_2_2());
+		array_push($branches, $this->_sub_1_2_3());
+		array_push($branches, $this->_sub_1_2_4());
+		array_push($branches, $this->_sub_1_2_5());
+		array_push($branches, $this->_sub_1_2_6());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_2_1() {
+		
+		return $this->_sub_1_2_1_1();
+		
+	}
+	
+	private function _sub_1_2_1_1() {
+		
+		global $Fabscript_EQ;
+		
+		return bovinus_tokenNode($Fabscript_EQ, 'op');
+		
+	}
+	
+	private function _sub_1_2_2() {
+		
+		return $this->_sub_1_2_2_1();
+		
+	}
+	
+	private function _sub_1_2_2_1() {
+		
+		global $Fabscript_NE;
+		
+		return bovinus_tokenNode($Fabscript_NE, 'op');
+		
+	}
+	
+	private function _sub_1_2_3() {
+		
+		return $this->_sub_1_2_3_1();
+		
+	}
+	
+	private function _sub_1_2_3_1() {
+		
+		global $Fabscript_GT;
+		
+		return bovinus_tokenNode($Fabscript_GT, 'op');
+		
+	}
+	
+	private function _sub_1_2_4() {
+		
+		return $this->_sub_1_2_4_1();
+		
+	}
+	
+	private function _sub_1_2_4_1() {
+		
+		global $Fabscript_GE;
+		
+		return bovinus_tokenNode($Fabscript_GE, 'op');
+		
+	}
+	
+	private function _sub_1_2_5() {
+		
+		return $this->_sub_1_2_5_1();
+		
+	}
+	
+	private function _sub_1_2_5_1() {
+		
+		global $Fabscript_LT;
+		
+		return bovinus_tokenNode($Fabscript_LT, 'op');
+		
+	}
+	
+	private function _sub_1_2_6() {
+		
+		return $this->_sub_1_2_6_1();
+		
+	}
+	
+	private function _sub_1_2_6_1() {
+		
+		global $Fabscript_LE;
+		
+		return bovinus_tokenNode($Fabscript_LE, 'op');
 		
 	}
 	
 	private function _sub_1_3() {
 		
-		global $Fabscript_PAR_CLOSE;
+		$branches = array();
+		array_push($branches, $this->_sub_1_3_1());
+		array_push($branches, $this->_sub_1_3_2());
 		
-		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
-		
-	}
-	
-	private function _sub_2() {
-		
-		return $this->_sub_2_1();
+		return new Bovinus_Fork($branches);
 		
 	}
 	
-	private function _sub_2_1() {
+	private function _sub_1_3_1() {
 		
-		global $Fabscript_LIT;
-		
-		return bovinus_tokenNode($Fabscript_LIT);
+		return $this->_sub_1_3_1_1();
 		
 	}
 	
-	private function _sub_3() {
+	private function _sub_1_3_1_1() {
 		
-		return $this->_sub_3_1();
-		
-	}
-	
-	private function _sub_3_1() {
-		
-		return new _Fabscript_Number_Rule();
+		return new _Fabscript_Expr_Rule('rhs');
 		
 	}
 	
-	private function _sub_4() {
+	private function _sub_1_3_2() {
 		
-		return $this->_sub_4_1();
-		
-	}
-	
-	private function _sub_4_1() {
-		
-		return new _Fabscript_Boolean_Rule();
+		return $this->_sub_1_3_2_1();
 		
 	}
 	
-	private function _sub_5() {
+	private function _sub_1_3_2_1() {
 		
-		return $this->_sub_5_1();
-		
-	}
-	
-	private function _sub_5_1() {
-		
-		return new _Fabscript_Path_Rule();
+		return new _Fabscript_Disjunction_Rule('rhs');
 		
 	}
 	
-	// edit-section operand-further-private-methods {
+	// edit-section comparison-further-private-methods {
 	
 	// add your methods here...
 	
@@ -2590,13 +1906,11 @@ class _Fabscript_Operand_Rule extends Bovinus_Rule {
 	
 }
 
-class _Fabscript_Symbol_Grammar extends Bovinus_Grammar {
+class _Fabscript_Paste_Snippet_Rule extends Bovinus_Rule {
 
-	public function __construct() {
+	public function __construct($identifier="") {
 	
-		global $Fabscript_all_token_types;
-		
-		parent::__construct('_Fabscript_Symbol_Grammar', $Fabscript_all_token_types);
+		parent::__construct('paste_snippet', $identifier);
 		
 	}
 	
@@ -2608,12 +1922,221 @@ class _Fabscript_Symbol_Grammar extends Bovinus_Grammar {
 	
 	public function transform($astNode) {
 		
-		// edit-section symbol-transform {
+		
+		$res = new Bovinus_AstNode('paste_snippet');
+		
+		$name = $astNode->getChildById('name')->getText();
+		$res->addChild(new Bovinus_AstNode('name', $name));
+		
+		$indentLevel = $astNode->getChildById('indent');
+		if ($indentLevel != null) {
+		    $indentLevel->setId('');
+		    $indent = new Bovinus_AstNode('indent_by');
+		    $indent->addChild($indentLevel);
+		    $res->addChild($indent);
+		}
+		
+		$argNodes = $astNode->getChildrenById('arg');
+		if (count($argNodes) > 0) {
+		    $args = new Bovinus_AstNode('arguments');
+		    $res->addChild($args);
+		    foreach ($argNodes as $argNode) {
+		        $argNode->setId('');
+		        $args->addChild($argNode);
+		    }
+		}
+		
+		return $res;
+		
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		array_push($elements, $this->_sub_1_4());
+		array_push($elements, $this->_sub_1_5());
+		array_push($elements, $this->_sub_1_6());
+		array_push($elements, $this->_sub_1_7());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_27;
+		
+		return bovinus_tokenNode($Fabscript_KEY_27);
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_KEY_25;
+		
+		return bovinus_tokenNode($Fabscript_KEY_25);
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		global $Fabscript_ID;
+		
+		return bovinus_tokenNode($Fabscript_ID, 'name');
+		
+	}
+	
+	private function _sub_1_4() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_1_5() {
+		
+		return bovinus_zero_to_one($this->_sub_1_5_1());
+		
+	}
+	
+	private function _sub_1_5_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_5_1_1());
+		array_push($elements, $this->_sub_1_5_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_5_1_1() {
+		
+		return new _Fabscript_Expr_Rule('arg');
+		
+	}
+	
+	private function _sub_1_5_1_2() {
+		
+		return bovinus_zero_to_many($this->_sub_1_5_1_2_1());
+		
+	}
+	
+	private function _sub_1_5_1_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_5_1_2_1_1());
+		array_push($elements, $this->_sub_1_5_1_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_5_1_2_1_1() {
+		
+		global $Fabscript_COMMA;
+		
+		return bovinus_tokenNode($Fabscript_COMMA);
+		
+	}
+	
+	private function _sub_1_5_1_2_1_2() {
+		
+		return new _Fabscript_Expr_Rule('arg');
+		
+	}
+	
+	private function _sub_1_6() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	private function _sub_1_7() {
+		
+		return bovinus_zero_to_one($this->_sub_1_7_1());
+		
+	}
+	
+	private function _sub_1_7_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_7_1_1());
+		array_push($elements, $this->_sub_1_7_1_2());
+		array_push($elements, $this->_sub_1_7_1_3());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_7_1_1() {
+		
+		global $Fabscript_KEY_28;
+		
+		return bovinus_tokenNode($Fabscript_KEY_28);
+		
+	}
+	
+	private function _sub_1_7_1_2() {
+		
+		global $Fabscript_KEY_29;
+		
+		return bovinus_tokenNode($Fabscript_KEY_29);
+		
+	}
+	
+	private function _sub_1_7_1_3() {
+		
+		return new _Fabscript_Expr_Rule('indent');
+		
+	}
+	
+	// edit-section paste_snippet-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Case_Branch_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('case_branch', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section case_branch-transform {
 
 		$children = $astNode->getChildren();
-		$children[0]->setId('');
-		
-		return $children[0];
+
+		if ($children[0]->getId() != 'default') {
+			$res = new Bovinus_AstNode($astNode->getName());
+			foreach ($children as $child) {
+				if ($child->getId() == 'expr') {
+					$child->setId('');
+					$res->addChild($child);		
+				}
+			}
+			return $res;
+		} else {
+			return new Bovinus_AstNode('default_branch');
+		}
 		
 		// } edit-section-end
 		
@@ -2621,17 +2144,262 @@ class _Fabscript_Symbol_Grammar extends Bovinus_Grammar {
 	
 	private function _sub_1() {
 		
-		return $this->_sub_1_1();
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		
+		return new Bovinus_Sequence($elements);
 		
 	}
 	
 	private function _sub_1_1() {
 		
-		return new _Fabscript_Path_Rule();
+		$branches = array();
+		array_push($branches, $this->_sub_1_1_1());
+		array_push($branches, $this->_sub_1_1_2());
+		
+		return new Bovinus_Fork($branches);
 		
 	}
 	
-	// edit-section symbol-further-private-methods {
+	private function _sub_1_1_1() {
+		
+		return $this->_sub_1_1_1_1();
+		
+	}
+	
+	private function _sub_1_1_1_1() {
+		
+		global $Fabscript_KEY_21;
+		
+		return bovinus_tokenNode($Fabscript_KEY_21, 'default');
+		
+	}
+	
+	private function _sub_1_1_2() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1_2_1());
+		array_push($elements, $this->_sub_1_1_2_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1_2_1() {
+		
+		return new _Fabscript_Expr_Rule('expr');
+		
+	}
+	
+	private function _sub_1_1_2_2() {
+		
+		return bovinus_zero_to_many($this->_sub_1_1_2_2_1());
+		
+	}
+	
+	private function _sub_1_1_2_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1_2_2_1_1());
+		array_push($elements, $this->_sub_1_1_2_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1_2_2_1_1() {
+		
+		global $Fabscript_COMMA;
+		
+		return bovinus_tokenNode($Fabscript_COMMA);
+		
+	}
+	
+	private function _sub_1_1_2_2_1_2() {
+		
+		return new _Fabscript_Expr_Rule('expr');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	// edit-section case_branch-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Call_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('call', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section call-transform {
+
+		$res = new Bovinus_AstNode($astNode->getName());
+		$child = $astNode->getChildAccess();
+
+		$name = new Bovinus_AstNode('name', $child->name->getText());
+		$res->addChild($name);
+
+		$args = $child->arg;
+		if ($args) {
+			if ( !is_array($args) ) {
+				$args->setId('');
+				$res->addChild($args);
+			} else {
+				foreach ($args as $arg) {
+					$arg->setId('');
+					$res->addChild($arg);
+				}
+			}
+		}
+		
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_ID;
+		
+		return bovinus_tokenNode($Fabscript_ID, 'name');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_2_1());
+		array_push($branches, $this->_sub_1_2_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_2_1_1());
+		array_push($elements, $this->_sub_1_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_2_1_1() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_1_2_1_2() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	private function _sub_1_2_2() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_2_2_1());
+		array_push($elements, $this->_sub_1_2_2_2());
+		array_push($elements, $this->_sub_1_2_2_3());
+		array_push($elements, $this->_sub_1_2_2_4());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_2_2_1() {
+		
+		global $Fabscript_PAR_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_PAR_OPEN);
+		
+	}
+	
+	private function _sub_1_2_2_2() {
+		
+		return new _Fabscript_Expr_Rule('arg');
+		
+	}
+	
+	private function _sub_1_2_2_3() {
+		
+		return bovinus_zero_to_many($this->_sub_1_2_2_3_1());
+		
+	}
+	
+	private function _sub_1_2_2_3_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_2_2_3_1_1());
+		array_push($elements, $this->_sub_1_2_2_3_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_2_2_3_1_1() {
+		
+		global $Fabscript_COMMA;
+		
+		return bovinus_tokenNode($Fabscript_COMMA);
+		
+	}
+	
+	private function _sub_1_2_2_3_1_2() {
+		
+		return new _Fabscript_Expr_Rule('arg');
+		
+	}
+	
+	private function _sub_1_2_2_4() {
+		
+		global $Fabscript_PAR_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_PAR_CLOSE);
+		
+	}
+	
+	// edit-section call-further-private-methods {
 	
 	// add your methods here...
 	
@@ -2834,6 +2602,77 @@ class _Fabscript_Sum_Rule extends Bovinus_Rule {
 	
 }
 
+class _Fabscript_Case_Begin_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('case_begin', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section case_begin-transform {
+
+		$res = new Bovinus_AstNode($astNode->getName());
+
+		$children = $astNode->getChildren();
+		$children[1]->setId('');
+		$res->addChild($children[1]);
+		
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_20;
+		
+		return bovinus_tokenNode($Fabscript_KEY_20);
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		return new _Fabscript_Path_Rule();
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		global $Fabscript_KEY_6;
+		
+		return bovinus_tokenNode($Fabscript_KEY_6);
+		
+	}
+	
+	// edit-section case_begin-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
 class _Fabscript_Atomic_Rule extends Bovinus_Rule {
 
 	public function __construct($identifier="") {
@@ -2900,6 +2739,167 @@ class _Fabscript_Atomic_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section atomic-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Path_Element_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('path_element', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		$start->connect($this->_sub_2())->connect($end);
+		$start->connect($this->_sub_3())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section path_element-transform {
+
+		$children = $astNode->getChildren();
+
+		if (count($children) == 1) {
+			
+			$children[0]->setId('');
+			return $children[0];
+
+		} else {
+
+			$res = new Bovinus_AstNode('list-element');
+
+			$child = $astNode->getChildAccess();
+			$res->addChild($child->list);
+
+			foreach ($astNode->getChildrenById('index') as $index) {
+				$res->addChild($index);
+			}
+			
+			return $res;
+
+		}
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		return $this->_sub_1_1();
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		return new _Fabscript_Call_Rule('call');
+		
+	}
+	
+	private function _sub_2() {
+		
+		return $this->_sub_2_1();
+		
+	}
+	
+	private function _sub_2_1() {
+		
+		return new _Fabscript_Var_Name_Rule('var');
+		
+	}
+	
+	private function _sub_3() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_3_1());
+		array_push($elements, $this->_sub_3_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_3_1() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_3_1_1());
+		array_push($branches, $this->_sub_3_1_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_3_1_1() {
+		
+		return $this->_sub_3_1_1_1();
+		
+	}
+	
+	private function _sub_3_1_1_1() {
+		
+		return new _Fabscript_Call_Rule('list');
+		
+	}
+	
+	private function _sub_3_1_2() {
+		
+		return $this->_sub_3_1_2_1();
+		
+	}
+	
+	private function _sub_3_1_2_1() {
+		
+		return new _Fabscript_Var_Name_Rule('list');
+		
+	}
+	
+	private function _sub_3_2() {
+		
+		return bovinus_one_to_many($this->_sub_3_2_1());
+		
+	}
+	
+	private function _sub_3_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_3_2_1_1());
+		array_push($elements, $this->_sub_3_2_1_2());
+		array_push($elements, $this->_sub_3_2_1_3());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_3_2_1_1() {
+		
+		global $Fabscript_BRACE_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
+		
+	}
+	
+	private function _sub_3_2_1_2() {
+		
+		return new _Fabscript_Expr_Rule('index');
+		
+	}
+	
+	private function _sub_3_2_1_3() {
+		
+		global $Fabscript_BRACE_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
+		
+	}
+	
+	// edit-section path_element-further-private-methods {
 	
 	// add your methods here...
 	
@@ -3126,325 +3126,6 @@ class _Fabscript_Disjunction_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section disjunction-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_While_Begin_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('while_begin', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section while_begin-transform {
-
-		$res = new Bovinus_AstNode($astNode->getName());
-
-		$child = $astNode->getChildAccess();
-
-		$condition = $child->cond;
-		$condition->setId('');
-		$res->addChild($condition);
-
-		return $res;
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		array_push($elements, $this->_sub_1_3());
-		array_push($elements, $this->_sub_1_4());
-		array_push($elements, $this->_sub_1_5());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		global $Fabscript_KEY_12;
-		
-		return bovinus_tokenNode($Fabscript_KEY_12);
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		global $Fabscript_BRACE_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
-		
-	}
-	
-	private function _sub_1_3() {
-		
-		return new _Fabscript_Disjunction_Rule('cond');
-		
-	}
-	
-	private function _sub_1_4() {
-		
-		global $Fabscript_BRACE_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
-		
-	}
-	
-	private function _sub_1_5() {
-		
-		global $Fabscript_KEY_9;
-		
-		return bovinus_tokenNode($Fabscript_KEY_9);
-		
-	}
-	
-	// edit-section while_begin-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('if_begin', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section if_begin-transform {
-
-		$child = $astNode->getChildAccess();
-
-		if ($child->if) {
-			$res = new Bovinus_AstNode('if_begin');
-		} else {
-			$res = new Bovinus_AstNode('elseif');
-		}
-
-		$condition = $child->cond;
-		$condition->setId('');
-		$res->addChild($condition);
-		
-		return $res;
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		array_push($elements, $this->_sub_1_3());
-		array_push($elements, $this->_sub_1_4());
-		array_push($elements, $this->_sub_1_5());
-		array_push($elements, $this->_sub_1_6());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		$branches = array();
-		array_push($branches, $this->_sub_1_1_1());
-		array_push($branches, $this->_sub_1_1_2());
-		
-		return new Bovinus_Fork($branches);
-		
-	}
-	
-	private function _sub_1_1_1() {
-		
-		return $this->_sub_1_1_1_1();
-		
-	}
-	
-	private function _sub_1_1_1_1() {
-		
-		global $Fabscript_KEY_14;
-		
-		return bovinus_tokenNode($Fabscript_KEY_14, 'if');
-		
-	}
-	
-	private function _sub_1_1_2() {
-		
-		return $this->_sub_1_1_2_1();
-		
-	}
-	
-	private function _sub_1_1_2_1() {
-		
-		global $Fabscript_KEY_15;
-		
-		return bovinus_tokenNode($Fabscript_KEY_15, 'elseif');
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		global $Fabscript_BRACE_OPEN;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
-		
-	}
-	
-	private function _sub_1_3() {
-		
-		return new _Fabscript_Disjunction_Rule('cond');
-		
-	}
-	
-	private function _sub_1_4() {
-		
-		global $Fabscript_BRACE_CLOSE;
-		
-		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
-		
-	}
-	
-	private function _sub_1_5() {
-		
-		global $Fabscript_KEY_16;
-		
-		return bovinus_tokenNode($Fabscript_KEY_16);
-		
-	}
-	
-	private function _sub_1_6() {
-		
-		global $Fabscript_KEY_17;
-		
-		return bovinus_tokenNode($Fabscript_KEY_17);
-		
-	}
-	
-	// edit-section if_begin-further-private-methods {
-	
-	// add your methods here...
-	
-	// } edit-section-end
-	
-}
-
-class _Fabscript_Conjunction_Rule extends Bovinus_Rule {
-
-	public function __construct($identifier="") {
-	
-		parent::__construct('conjunction', $identifier);
-		
-	}
-	
-	public function expand($start, $end, $context) {
-		
-		$start->connect($this->_sub_1())->connect($end);
-		
-	}
-	
-	public function transform($astNode) {
-		
-		// edit-section conjunction-transform {
-		
-		$parts = $astNode->getChildrenById('part');
-
-		if (count($parts) == 1) {
-
-			$res = $parts[0];
-
-		} else {
-
-			$res = new Bovinus_AstNode('and');
-			foreach ($parts as $p) {
-				$p->setId('');
-				$res->addChild($p);
-			}
-
-		}
-		
-		return $res;
-		
-		// } edit-section-end
-		
-	}
-	
-	private function _sub_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_1());
-		array_push($elements, $this->_sub_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_1() {
-		
-		return new _Fabscript_Condition_Rule('part');
-		
-	}
-	
-	private function _sub_1_2() {
-		
-		return bovinus_zero_to_many($this->_sub_1_2_1());
-		
-	}
-	
-	private function _sub_1_2_1() {
-		
-		$elements = array();
-		array_push($elements, $this->_sub_1_2_1_1());
-		array_push($elements, $this->_sub_1_2_1_2());
-		
-		return new Bovinus_Sequence($elements);
-		
-	}
-	
-	private function _sub_1_2_1_1() {
-		
-		global $Fabscript_KEY_31;
-		
-		return bovinus_tokenNode($Fabscript_KEY_31);
-		
-	}
-	
-	private function _sub_1_2_1_2() {
-		
-		return new _Fabscript_Condition_Rule('part');
-		
-	}
-	
-	// edit-section conjunction-further-private-methods {
 	
 	// add your methods here...
 	
@@ -3764,6 +3445,325 @@ class _Fabscript_Loop_Begin_Rule extends Bovinus_Rule {
 	}
 	
 	// edit-section loop_begin-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_While_Begin_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('while_begin', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section while_begin-transform {
+
+		$res = new Bovinus_AstNode($astNode->getName());
+
+		$child = $astNode->getChildAccess();
+
+		$condition = $child->cond;
+		$condition->setId('');
+		$res->addChild($condition);
+
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		array_push($elements, $this->_sub_1_4());
+		array_push($elements, $this->_sub_1_5());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		global $Fabscript_KEY_12;
+		
+		return bovinus_tokenNode($Fabscript_KEY_12);
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_BRACE_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		return new _Fabscript_Disjunction_Rule('cond');
+		
+	}
+	
+	private function _sub_1_4() {
+		
+		global $Fabscript_BRACE_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
+		
+	}
+	
+	private function _sub_1_5() {
+		
+		global $Fabscript_KEY_9;
+		
+		return bovinus_tokenNode($Fabscript_KEY_9);
+		
+	}
+	
+	// edit-section while_begin-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_Conjunction_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('conjunction', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section conjunction-transform {
+		
+		$parts = $astNode->getChildrenById('part');
+
+		if (count($parts) == 1) {
+
+			$res = $parts[0];
+
+		} else {
+
+			$res = new Bovinus_AstNode('and');
+			foreach ($parts as $p) {
+				$p->setId('');
+				$res->addChild($p);
+			}
+
+		}
+		
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		return new _Fabscript_Condition_Rule('part');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		return bovinus_zero_to_many($this->_sub_1_2_1());
+		
+	}
+	
+	private function _sub_1_2_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_2_1_1());
+		array_push($elements, $this->_sub_1_2_1_2());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_2_1_1() {
+		
+		global $Fabscript_KEY_31;
+		
+		return bovinus_tokenNode($Fabscript_KEY_31);
+		
+	}
+	
+	private function _sub_1_2_1_2() {
+		
+		return new _Fabscript_Condition_Rule('part');
+		
+	}
+	
+	// edit-section conjunction-further-private-methods {
+	
+	// add your methods here...
+	
+	// } edit-section-end
+	
+}
+
+class _Fabscript_If_Begin_Rule extends Bovinus_Rule {
+
+	public function __construct($identifier="") {
+	
+		parent::__construct('if_begin', $identifier);
+		
+	}
+	
+	public function expand($start, $end, $context) {
+		
+		$start->connect($this->_sub_1())->connect($end);
+		
+	}
+	
+	public function transform($astNode) {
+		
+		// edit-section if_begin-transform {
+
+		$child = $astNode->getChildAccess();
+
+		if ($child->if) {
+			$res = new Bovinus_AstNode('if_begin');
+		} else {
+			$res = new Bovinus_AstNode('elseif');
+		}
+
+		$condition = $child->cond;
+		$condition->setId('');
+		$res->addChild($condition);
+		
+		return $res;
+		
+		// } edit-section-end
+		
+	}
+	
+	private function _sub_1() {
+		
+		$elements = array();
+		array_push($elements, $this->_sub_1_1());
+		array_push($elements, $this->_sub_1_2());
+		array_push($elements, $this->_sub_1_3());
+		array_push($elements, $this->_sub_1_4());
+		array_push($elements, $this->_sub_1_5());
+		array_push($elements, $this->_sub_1_6());
+		
+		return new Bovinus_Sequence($elements);
+		
+	}
+	
+	private function _sub_1_1() {
+		
+		$branches = array();
+		array_push($branches, $this->_sub_1_1_1());
+		array_push($branches, $this->_sub_1_1_2());
+		
+		return new Bovinus_Fork($branches);
+		
+	}
+	
+	private function _sub_1_1_1() {
+		
+		return $this->_sub_1_1_1_1();
+		
+	}
+	
+	private function _sub_1_1_1_1() {
+		
+		global $Fabscript_KEY_14;
+		
+		return bovinus_tokenNode($Fabscript_KEY_14, 'if');
+		
+	}
+	
+	private function _sub_1_1_2() {
+		
+		return $this->_sub_1_1_2_1();
+		
+	}
+	
+	private function _sub_1_1_2_1() {
+		
+		global $Fabscript_KEY_15;
+		
+		return bovinus_tokenNode($Fabscript_KEY_15, 'elseif');
+		
+	}
+	
+	private function _sub_1_2() {
+		
+		global $Fabscript_BRACE_OPEN;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_OPEN);
+		
+	}
+	
+	private function _sub_1_3() {
+		
+		return new _Fabscript_Disjunction_Rule('cond');
+		
+	}
+	
+	private function _sub_1_4() {
+		
+		global $Fabscript_BRACE_CLOSE;
+		
+		return bovinus_tokenNode($Fabscript_BRACE_CLOSE);
+		
+	}
+	
+	private function _sub_1_5() {
+		
+		global $Fabscript_KEY_16;
+		
+		return bovinus_tokenNode($Fabscript_KEY_16);
+		
+	}
+	
+	private function _sub_1_6() {
+		
+		global $Fabscript_KEY_17;
+		
+		return bovinus_tokenNode($Fabscript_KEY_17);
+		
+	}
+	
+	// edit-section if_begin-further-private-methods {
 	
 	// add your methods here...
 	

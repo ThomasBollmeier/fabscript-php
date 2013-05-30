@@ -19,3 +19,4 @@ unit-test/Makefile.in
 dist/
 *.tar.gz
 nbproject
+.idea

@@ -21,24 +21,7 @@ require_once 'Fabscript/parser.php';
 require_once 'Fabscript/expression.php';
 require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/environment.php';
-
-interface Fabscript_Element {
-	
-	public function getLines($env);
-
-}
-
-interface Fabscript_TextElement extends Fabscript_Element {
-
-	public function addRawLine($rawLine);
-
-}
-
-interface Fabscript_Container extends Fabscript_TextElement {
-
-	public function addElement(Fabscript_Element $element);
-
-}
+require_once 'Fabscript/container.php';
 
 class Fabscript_Text implements Fabscript_TextElement {
 

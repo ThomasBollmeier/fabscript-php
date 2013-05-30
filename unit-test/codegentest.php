@@ -42,6 +42,12 @@ function firstLetter($name) {
 
 }
 
+function is_empty($text) {
+
+    return empty($text);
+
+}
+
 class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
@@ -263,6 +269,32 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->showLines($lines);
 
 	}
+
+    public function testSnippet() {
+
+        $this->creator->setGlobalVar("is_empty", "is_empty");
+
+        $stream = new Fabscript_StringsInput();
+        $stream->addLine(':> snippet greeting(name, first_name)');
+        $stream->addLine('  :> if [ not is_empty(first_name) ] then begin');
+        $stream->addLine('Hallo ${first_name} ${name}!');
+        $stream->addLine('  :> else');
+        $stream->addLine('Hallo Herr/Frau ${name}!');
+        $stream->addLine('  :> endif');
+        $stream->addLine(':> endsnippet');
+
+        $stream->addLine(':> define level = 0');
+        $stream->addLine(':> paste snippet greeting("Bollmeier", "") indent by level');
+        $stream->addLine(':> level = level + 1');
+        $stream->addLine(':> paste snippet greeting("Bollmeier", "Thomas") indent by level');
+
+        $this->creator->processTemplate($stream);
+
+        $lines = $this->creator->getLines();
+        $this->assertEquals(2, count($lines));
+        $this->showLines($lines);
+
+    }
 
 	private function showLines($lines) {
 

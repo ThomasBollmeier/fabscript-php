@@ -207,6 +207,32 @@ class Fabscript_CodeCreator {
 				$obj->addElement($varDeclOrAssignment);
 				break;
 
+            case "snippet_begin":
+                $snippet = $this->interpreter->interpret($ast);
+                $snippetName = $snippet->getName();
+                if (array_key_exists($snippetName, $this->snippets)) {
+                    throw new Exception("Snippet '{$snippetName}' exists already");
+                }
+                $this->snippets[$snippetName] = $snippet;
+                $this->push($name, $snippet);
+                break;
+
+            case "snippet_end":
+                $this->pop();
+                break;
+
+            case "paste_snippet":
+                $pasteData = $this->interpreter->interpret($ast);
+                $snippetName = $pasteData["name"];
+                if (array_key_exists($snippetName, $this->snippets)) {
+                    $snippetDef = $this->snippets[$snippetName];
+                    $snippet = $snippetDef->paste($pasteData["arguments"], $pasteData["indentLevel"]);
+                    $this->getCurrContainer()->addElement($snippet);
+                } else {
+                    throw new Exception("Snippet '{$snippetName}' could not be found");
+                }
+                break;
+
 		}
 
 	}
@@ -283,6 +309,7 @@ class Fabscript_CodeCreator {
 	private $parser;
 	private $interpreter;
 	private $stack;
+    private $snippets = array();
 
 }
 
