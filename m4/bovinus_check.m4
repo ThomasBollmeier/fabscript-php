@@ -28,12 +28,15 @@ AC_DEFUN([FABSCRIPT_CHECK_FOR_BOVINUS_PHP],[
 
 	AC_MSG_CHECKING([for bovinus PHP support])
 
-	php -r "require_once 'Bovinus/parser.php';" 1>/dev/null 2>/dev/null
+	cmd="set_include_path('${prefix}/lib/php'); require_once 'Bovinus/parser.php';"
+
+	${PHP} -r "$cmd" 1>/dev/null 2>/dev/null
+
 	if test "$?" == "0"; then
 		AC_MSG_RESULT([yes])
 	else 
 		AC_MSG_RESULT([no])
-		AC_MSG_ERROR([No bovinus runtime could be found. Check your PHP library path])
+		AC_MSG_ERROR([No bovinus runtime could be found. Check your PHP library path. PHP interpreter path is: ${PHP}])
 	fi
 
 ])

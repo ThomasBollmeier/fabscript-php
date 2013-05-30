@@ -9,5 +9,5 @@ EXTRA_DIST = \
 	parser.php \
 	preprocessor.php
 
-fabscriptdir = $(PHP_LIBDIR)/Fabscript
+fabscriptdir = $(prefix)/lib/php/Fabscript
 fabscript_DATA = $(EXTRA_DIST)
