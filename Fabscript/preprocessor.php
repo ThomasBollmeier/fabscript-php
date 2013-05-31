@@ -172,7 +172,7 @@ class Fabscript_Preprocessor {
 	private function getInclPath($includeName) {
 
 		foreach (Fabscript_Preprocessor::$searchDirs as $dir) {
-			$path = $dir . DIRECTORY_SEPARATOR . $includeName;
+			$path = $dir . "/" . $includeName;
 			if (file_exists($path)) {
 				return $path;
 			}

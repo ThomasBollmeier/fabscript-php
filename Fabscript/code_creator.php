@@ -32,12 +32,33 @@ function fabscript_addText($templatePath, $globalVars) {
 }
 
 function fabscript_setTemplateDirs($searchDirs = array(".")) {
-
-	Fabscript_Preprocessor::$searchDirs = $searchDirs;
+	
+	$curdir = dirname($_SERVER["SCRIPT_FILENAME"]);
+	
+	// searchDirs can be passed as array or as colon separated string:
+	if (is_array($searchDirs)) {
+		$dirList = $searchDirs;
+	} else {
+		$dirList = explode(":", $searchDirs);
+	}
+	
+	$dirs = array();		
+	foreach ($dirList as $searchDir) {
+		if ("/" == $searchDir[0]) { // absolute path
+			array_push($dirs, $searchDir);
+		} else { // relative path
+			array_push($dirs, $curdir . "/" . $searchDir);
+		}
+	}
+	
+	Fabscript_Preprocessor::$searchDirs = $dirs;
+	Fabscript_CodeCreator::$templateDirs = $dirs;
 
 }
 
 class Fabscript_CodeCreator {
+	
+	public static $templateDirs = array(".");
 
 	public function __construct() {
 
@@ -49,9 +70,13 @@ class Fabscript_CodeCreator {
 		
 	}
 
-	public function reset() {
+	public function reset($complete = FALSE) {
 
 		$this->stack = array(array("element" => "", "object" => new Fabscript_Block()));
+		
+		if ($complete) {
+			$this->globalEnv = new Fabscript_Environment();
+		}
 
 	}
 
@@ -73,7 +98,8 @@ class Fabscript_CodeCreator {
 
 		$this->reset();
 
-		$this->processTemplate(new Fabscript_FileInput($templatePath));
+		$completePath = $this->getCompletePath($templatePath);
+		$this->processTemplate(new Fabscript_FileInput($completePath));
 
 		foreach ($this->getLines() as $line) {
 			echo $line . "\n";
@@ -303,6 +329,21 @@ class Fabscript_CodeCreator {
 			return $curr["object"]["branch"];
 		}
 		
+	}
+	
+	private function getCompletePath($path) {
+		
+		if ("/" == $path[0]) return $path;
+		
+		foreach (self::$templateDirs as $dir) {
+			$fullpath = $dir . "/" . $path;
+			if (file_exists($fullpath)) {
+				return $fullpath;
+			}
+		}
+
+		return "";
+				
 	}
 
 	private $preprocessor;
