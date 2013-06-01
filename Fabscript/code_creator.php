@@ -276,11 +276,24 @@ class Fabscript_CodeCreator {
 
 	public function getLines() {
 
+        $res = array();
+
 		$document = $this->stack[0]["object"];
 
-		return $document->getLines($this->globalEnv);
+		$originalLines = $document->getLines($this->globalEnv);
 
-	}
+        // Pretty print - strip off multiple empty lines:
+        $lastLine = "";
+        foreach ($originalLines as $line) {
+            if ("" != $lastLine || "" != $line) {
+                array_push($res, $line);
+                $lastLine = $line;
+            }
+        }
+
+        return $res;
+
+    }
 
 	private function push($elementName, $obj) {
 
