@@ -294,7 +294,22 @@ class Fabscript_CodeCreator {
         return $res;
 
     }
+    
+	public function getCompletePath($path) {
+		
+		if ("/" == $path[0]) return $path;
+		
+		foreach (self::$templateDirs as $dir) {
+			$fullpath = $dir . "/" . $path;
+			if (file_exists($fullpath)) {
+				return $fullpath;
+			}
+		}
 
+		return "";
+				
+	}
+    
 	private function push($elementName, $obj) {
 
 		$this->stack[]  = array("element" => $elementName, "object" => $obj);
@@ -344,21 +359,6 @@ class Fabscript_CodeCreator {
 		
 	}
 	
-	private function getCompletePath($path) {
-		
-		if ("/" == $path[0]) return $path;
-		
-		foreach (self::$templateDirs as $dir) {
-			$fullpath = $dir . "/" . $path;
-			if (file_exists($fullpath)) {
-				return $fullpath;
-			}
-		}
-
-		return "";
-				
-	}
-
 	private $preprocessor;
 	private $parser;
 	private $interpreter;
