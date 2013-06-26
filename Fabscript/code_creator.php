@@ -76,6 +76,7 @@ class Fabscript_CodeCreator {
 		
 		if ($complete) {
 			$this->globalEnv = new Fabscript_Environment();
+			$this->snippets = array();
 		}
 
 	}
