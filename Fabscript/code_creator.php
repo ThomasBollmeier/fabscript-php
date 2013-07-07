@@ -94,6 +94,25 @@ class Fabscript_CodeCreator {
 		}
 
 	}
+	
+	public function __set($name, $value) {
+		
+		$this->setGlobalVar($name, $value);
+		
+	}
+	
+	/**
+	 * Make all current global variables available 
+	 */
+	public function useGlobalVars() {
+		
+		foreach ($GLOBALS as $key => $value) {
+			if ($this !== $value) {
+				$this->setGlobalVar($key, $value);
+			}
+		}
+		
+	}
 
 	public function createFromTemplate($templatePath) {
 
@@ -363,6 +382,7 @@ class Fabscript_CodeCreator {
 	private $preprocessor;
 	private $parser;
 	private $interpreter;
+	private $globalEnv;
 	private $stack;
     private $snippets = array();
 

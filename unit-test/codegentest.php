@@ -179,9 +179,15 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 				new Person("Merkel", "Angela")
 				)
 			);
+			
+		$this->creator->mitarbeiter = $employees;
+		$this->creator->ersterBuchstabe = "firstLetter";
+		$this->creator->people = $people;
+		/*
 		$this->creator->setGlobalVar("mitarbeiter", $employees);
 		$this->creator->setGlobalVar("ersterBuchstabe", "firstLetter");
 		$this->creator->setGlobalVar("people", $people);
+		*/
 
 		$stream = new Fabscript_StringsInput();
 		$stream->addLine(':> define counter = 10');
@@ -272,7 +278,7 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 
     public function testSnippet() {
 
-        $this->creator->setGlobalVar("is_empty", "is_empty");
+        $this->creator->is_empty = "is_empty";
 
         $stream = new Fabscript_StringsInput();
         $stream->addLine(':> snippet greeting(name, first_name)');
