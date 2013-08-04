@@ -20,3 +20,6 @@ dist/
 *.tar.gz
 nbproject
 .idea
+.buildpath
+.project
+.settings

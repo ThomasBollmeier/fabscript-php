@@ -29,6 +29,8 @@ command =
 	loop_end |
 	while_begin |
 	while_end |
+	break |
+	continue |
 	if_begin | 
 	else |
 	if_end |
@@ -39,7 +41,7 @@ command =
 	assign |
 	snippet_begin |
 	snippet_end |
-        paste_snippet
+    paste_snippet
 	;
 
 @grammar
@@ -63,6 +65,16 @@ while_begin =
 while_end = 
 	'endwhile'
 	;
+
+break = 'break' | 'leave';
+% break {
+return new Bovinus_AstNode('break');
+% }
+
+continue = 'continue' | 'next';
+% continue {
+return new Bovinus_AstNode('continue');
+% }
 
 if_begin = 
 	(if='if'|elseif='elseif') BRACE_OPEN cond=disjunction BRACE_CLOSE 'then' 'begin'

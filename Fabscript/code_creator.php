@@ -22,6 +22,7 @@ require_once 'Fabscript/environment.php';
 require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/block.php';
 require_once 'Fabscript/preprocessor.php';
+require_once 'Fabscript/break_continue.php';
 
 function fabscript_addText($templatePath, $globalVars) {
 
@@ -168,6 +169,14 @@ class Fabscript_CodeCreator {
 				$whileLoop = $this->getCurrContainer("while_begin");
 				$this->pop();
 				$this->getCurrContainer()->addElement($whileLoop);
+				break;
+				
+			case "break":
+				$this->getCurrContainer()->addElement(new \Fabscript\BreakStatement());
+				break;
+				
+			case "continue":
+				$this->getCurrContainer()->addElement(new \Fabscript\ContinueStatement());
 				break;
 				
 			case "if_begin":

@@ -82,6 +82,29 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->showLines($lines);
 
 	}
+	
+	public function testForLoopWithExit() {
+		
+		$numbers = array("eins", "zwei", "drei", "vier", "fünf");
+		
+		$template = new Fabscript_StringsInput();
+		$template->addLine(":> define i = 0");
+		$template->addLine(":> for each number in numbers do");
+		$template->addLine('echo "${number}"');
+		$template->addLine("	:> i = i + 1");
+		$template->addLine("	:> if [ i == 3 ] then begin");
+		$template->addLine('Das ist das Ende!');
+		$template->addLine("		:> leave");
+		$template->addLine("	:> endif");
+		$template->addLine(":> done");
+		
+		$this->creator->numbers = $numbers;
+		$this->creator->processTemplate($template);
+		
+		$lines = $this->creator->getLines();
+		$this->showLines($lines);
+		
+	}
 
 	public function testWhileLoop() {
 
@@ -108,7 +131,29 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->showLines($lines);
 
 	}
-
+	
+	public function testWhileLoopWithExit() {
+	
+		$numbers = array("eins", "zwei", "drei", "vier", "fünf");
+	
+		$template = new Fabscript_StringsInput();
+		$template->addLine(":> define i = 0");
+		$template->addLine(":> while [ i < 10 ] do");
+		$template->addLine("	:> i = i + 1");
+		$template->addLine("	:> if [ i == 5 ] then begin");
+		$template->addLine('Halbzeit!');
+		$template->addLine("		:> next");
+		$template->addLine("	:> endif");
+		$template->addLine('while ${i}');
+		$template->addLine(":> endwhile");
+	
+		$this->creator->numbers = $numbers;
+		$this->creator->processTemplate($template);
+	
+		$lines = $this->creator->getLines();
+		$this->showLines($lines);
+	
+	}
 	public function testBranch() {
 
 		$employees = array( "A1" => "Meier", "A2" => "Müller", "A3" => "Schulze", "A4" => "Kalkreuth", "A5" => "Itzenplitz" );
