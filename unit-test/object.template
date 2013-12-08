@@ -2,7 +2,15 @@
 class ${objName} {
 
 :> edit 'custom_section_public'
+
+    :> for each field in fields do
+    public function get${capitalize(field)}() {
+        return $this->${field};
+    }
+
+    :> done
     // insert your public stuff here
+
 :> endedit
 
 :> for each field in fields do

@@ -24,10 +24,15 @@ require_once("Fabscript/code_creator.php");
 require_once("Fabscript/edit_section_parser.php");
 use Fabscript\ProgLang;
 
+function capitalize($str) {
+    return strtoupper($str[0]).substr($str, 1);
+}
+
 $creator = new Fabscript_CodeCreator();
 $creator->setGlobalVars(array(
     "objName" => "Person",
-    "fields" => array("firstName", "lastName", "birthday", "sex")
+    "fields" => array("firstName", "lastName", "birthday", "sex"),
+    "capitalize" => "capitalize"
 ));
 
 $creator->createFileFromTemplate("object.template", "person.php", ProgLang::PHP);
