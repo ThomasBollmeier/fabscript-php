@@ -3,6 +3,7 @@
 ini_set('include_path', "..:" . ini_get('include_path'));
 
 require_once 'Fabscript/code_creator.php';
+require_once 'Fabscript/edit_section.php';
 
 class Person {
 
@@ -45,6 +46,20 @@ function firstLetter($name) {
 function is_empty($text) {
 
     return empty($text);
+
+}
+
+class EditSectionForC implements Fabscript\EditSectionConfig {
+
+    public function getStartComment($sectionName)
+    {
+        return "/* begin-of-edit-section ".$sectionName." { */";
+    }
+
+    public function getEndComment($sectionName)
+    {
+        return "/* } end-of-edit-section */";
+    }
 
 }
 
@@ -207,6 +222,29 @@ class CodeGenerationTest extends PHPUnit_Framework_TestCase {
 		$this->showLines($lines);
 
 	}
+
+    public function testEditableSection() {
+
+        $this->creator->setGlobalVar("values", array("eins", "zwei", "drei"));
+        $this->creator->setEditSectionConfig(new EditSectionForC());
+
+        $stream = new Fabscript_StringsInput();
+        $stream->addLine(':> for each value in values do');
+        $stream->addLine('  :> edit value');
+        $stream->addLine('// add your code for section "${value}" here...');
+        $stream->addLine('  :> endedit');
+        $stream->addLine('');
+        $stream->addLine(':> endfor');
+
+        $this->creator->processTemplate($stream);
+
+        $lines = $this->creator->getLines();
+        $this->assertEquals(12, count($lines));
+
+        //$this->expectOutputString("");
+        $this->showLines($lines);
+
+    }
 
 	public function testTemplate() {
 

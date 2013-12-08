@@ -41,7 +41,9 @@ command =
 	assign |
 	snippet_begin |
 	snippet_end |
-    paste_snippet
+    paste_snippet |
+    edit_section_begin |
+    edit_section_end
 	;
 
 @grammar
@@ -164,6 +166,27 @@ if (count($argNodes) > 0) {
 }
 
 return $res;
+
+% }
+
+edit_section_begin = 'edit' section_name=expr;
+
+% edit_section_begin {
+
+$res = new Bovinus_AstNode('edit_section_begin');
+$sectionNameNode = $astNode->getChildById('section_name');
+$sectionNameNode->setId('');
+$res->addChild($sectionNameNode);
+
+return $res;
+	
+% }
+
+edit_section_end = 'endedit';
+
+% edit_section_end {
+
+return new Bovinus_AstNode('edit_section_end');
 
 % }
 

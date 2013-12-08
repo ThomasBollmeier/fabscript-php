@@ -104,6 +104,17 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         
     }
 
+    public function testEditSection() {
+
+        $this->_parse("edit 'my_section'");
+        $this->_parse("edit my_section_var");
+        $this->_parse("edit my_sections.current.name");
+        $this->_parse("edit composeName(basename, suffix)");
+
+        $this->_parse("endedit");
+
+    }
+
     private function _parse($code) {
 
         try {
@@ -116,6 +127,7 @@ class CommandParserTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($ast != null);
 
         if ($ast != null) {
+            //$this->expectOutputString('');
             echo "\n" . $ast->toXml();
         }
     }
@@ -175,4 +187,3 @@ class SymbolParserTest extends PHPUnit_Framework_TestCase {
 
 }
 
-?>

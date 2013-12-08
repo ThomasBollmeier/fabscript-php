@@ -23,6 +23,7 @@ require_once 'Fabscript/interpreter.php';
 require_once 'Fabscript/block.php';
 require_once 'Fabscript/preprocessor.php';
 require_once 'Fabscript/break_continue.php';
+require_once 'Fabscript/edit_section_parser.php';
 
 function fabscript_addText($templatePath, $globalVars) {
 
@@ -61,6 +62,12 @@ class Fabscript_CodeCreator {
 	
 	public static $templateDirs = array(".");
 
+    public static function getCurrent() {
+
+        return Fabscript_CodeCreator::$currentInstance;
+
+    }
+
 	public function __construct() {
 
 		$this->preprocessor = new Fabscript_Preprocessor();
@@ -78,6 +85,7 @@ class Fabscript_CodeCreator {
 		if ($complete) {
 			$this->globalEnv = new Fabscript_Environment();
 			$this->snippets = array();
+            $this->editSections = array();
 		}
 
 	}
@@ -115,6 +123,75 @@ class Fabscript_CodeCreator {
 		
 	}
 
+    /**
+     * @param $config instance of \Fabscript\EditSectionConfig
+     */
+    public function setEditSectionConfig($config) {
+
+        $this->editSectionConfig = $config;
+
+    }
+
+    public function getEditSectionConfig() {
+
+        return $this->editSectionConfig;
+
+    }
+
+    public function setEditSectionParser($parser) {
+
+        $this->editSectionParser = $parser;
+
+    }
+
+    /**
+     * @param $sectionName
+     * @return array of lines or FALSE if there is no section with name $sectionName
+     */
+    public function getEditedLines($sectionName) {
+
+        if (array_key_exists($sectionName, $this->editSections)) {
+            return $this->editSections[$sectionName];
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Create or update a file from a given template
+     *
+     * @param $templatePath : path to template file
+     * @param $outFilePath : path of output file
+     * @param $progLanguage : programming language (required for editable section generation)
+     */
+    public function createFileFromTemplate($templatePath, $outFilePath, $progLanguage) {
+
+        $this->reset();
+
+        $completePath = $this->getCompletePath($templatePath);
+        $this->processTemplate(new Fabscript_FileInput($completePath));
+
+        // If output file exists already we have to save the edited sections
+        // before (re)generation
+
+        $factory = new \Fabscript\EditSectionParserFactory($progLanguage);
+        $this->setEditSectionParser($factory->getParser());
+
+        $this->scanEditableSections($outFilePath);
+
+        // Now generate the file:
+
+        $this->setEditSectionConfig($factory->getConfig());
+        $lines = $this->getLines();
+
+        $fp = fopen($outFilePath, "w");
+        foreach ($lines as $line) {
+            fwrite($fp, $line."\n");
+        }
+        fclose($fp);
+
+    }
+
 	public function createFromTemplate($templatePath) {
 
 		$this->reset();
@@ -144,7 +221,7 @@ class Fabscript_CodeCreator {
 
 	}
 
-	public function processCommand($command) {
+    public function processCommand($command) {
 
 		$ast = $this->parser->parseString($command);
 		$name = $ast->getName();
@@ -288,6 +365,17 @@ class Fabscript_CodeCreator {
                 }
                 break;
 
+            case "edit_section_begin":
+                $editSection = $this->interpreter->interpret($ast);
+                $this->push($name, $editSection);
+                break;
+
+            case "edit_section_end":
+                $editSection = $this->getCurrObj("edit_section_begin");
+                $this->pop();
+                $this->getCurrContainer()->addElement($editSection);
+                break;
+
 		}
 
 	}
@@ -306,6 +394,8 @@ class Fabscript_CodeCreator {
 	public function getLines() {
 
         $res = array();
+
+        self::$currentInstance = $this;
 
 		$document = $this->stack[0]["object"];
 
@@ -351,14 +441,6 @@ class Fabscript_CodeCreator {
 
 	}
 
-	private function getCurrElement() {
-
-		$curr = end($this->stack);
-
-		return $curr["element"];
-
-	}
-
 	private function getCurrObj($expectedElement = "") {
 
 		$curr = end($this->stack);
@@ -387,14 +469,67 @@ class Fabscript_CodeCreator {
 		}
 		
 	}
-	
+
+    private function scanEditableSections($filePath) {
+
+        if ($this->editSectionParser === NULL) {
+            throw new Exception("No edit section parser configured!");
+        }
+
+        $this->editSections = array();
+
+        if (!file_exists($filePath)) {
+            return;
+        }
+
+        $fp = fopen($filePath, "r");
+
+        $currentSection = "";
+        $editedLines = array();
+
+        while (!feof($fp)) {
+
+            $line = fgets($fp);
+            $line = rtrim($line); // remove end of line
+
+            $sectionName = $this->editSectionParser->getSectionName($line);
+            if ($sectionName !== FALSE) {
+                if (strlen($currentSection) === 0) {
+                    $currentSection = $sectionName;
+                    $editedLines = array();
+                } else {
+                    fclose($fp);
+                    throw new Exception("Edit sections must not be nested!");
+                }
+            } else if ($this->editSectionParser->isEndComment($line)) {
+                if (strlen($currentSection) > 0) {
+                    $this->editSections[$currentSection] = $editedLines;
+                    $currentSection = "";
+                    $editedLines = array();
+                } else {
+                    throw new Exception("Encountered unexpected section end!");
+                }
+            } else {
+                if (strlen($currentSection) > 0) {
+                    array_push($editedLines, $line);
+                }
+            }
+
+        }
+
+        fclose($fp);
+    }
+
+    private static $currentInstance = NULL;
 	private $preprocessor;
 	private $parser;
 	private $interpreter;
 	private $globalEnv;
 	private $stack;
     private $snippets = array();
+    private $editSectionConfig = NULL;
+    private $editSectionParser = NULL;
+    private $editSections = array();
 
 }
 
-?>

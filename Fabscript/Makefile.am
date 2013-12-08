@@ -1,7 +1,10 @@
 EXTRA_DIST = \
 	block.php  \
+	break_continue.php \
 	code_creator.php \
 	container.php \
+	edit_section.php \
+	edit_section_parser.php \
 	environment.php \
 	expression.php \
 	interpreter.php \

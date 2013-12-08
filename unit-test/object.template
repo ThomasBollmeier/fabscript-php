@@ -1,0 +1,16 @@
+<?php
+class ${objName} {
+
+:> edit 'custom_section_public'
+    // insert your public stuff here
+:> endedit
+
+:> for each field in fields do
+    private $${field};
+:> done
+
+:> edit 'custom_section_private'
+    // insert your private stuff here
+:> endedit
+
+}

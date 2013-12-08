@@ -22,6 +22,7 @@ require_once 'Fabscript/expression.php';
 require_once 'Fabscript/logical_expression.php';
 require_once 'Fabscript/block.php';
 require_once 'Fabscript/snippet.php';
+require_once 'Fabscript/edit_section.php';
 
 class Fabscript_Interpreter {
 
@@ -73,6 +74,9 @@ class Fabscript_Interpreter {
 
             case "paste_snippet":
                 return $this->interpret_paste_snippet($ast);
+
+            case "edit_section_begin":
+            	return $this->interpret_edit_section($ast);
 
 			default:
 				throw new Exception("Interpreter error: '" . $ast->getName() . "'");
@@ -206,6 +210,15 @@ class Fabscript_Interpreter {
         }
 
         return $res;
+
+    }
+
+    private function interpret_edit_section($ast) {
+
+    	$children = $ast->getChildren();
+        $sectionNameExpr = $this->interpret_expr($children[0]);
+
+        return new \Fabscript\EditSection($sectionNameExpr);
 
     }
 
