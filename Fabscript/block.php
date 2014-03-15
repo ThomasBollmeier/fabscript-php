@@ -456,6 +456,29 @@ class Fabscript_Declaration implements Fabscript_Element {
 
 }
 
+class Fabscript_Declarations implements Fabscript_Element {
+
+	public function __construct() {
+		$this->declarations = array();
+	}
+
+	public function add($decl) {
+		array_push($this->declarations, $decl);
+	}
+
+	public function getLines($env) {
+
+		foreach ($this->declarations as $decl) {
+			$decl->getLines($env);
+		}
+
+		return array(); //dummy
+	}
+
+	private $declarations;
+
+}
+
 class Fabscript_Assignment implements Fabscript_Element {
 
 	public function __construct($varName, $valueExpr) {

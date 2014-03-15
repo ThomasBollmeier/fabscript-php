@@ -103,8 +103,8 @@ case_end =
 	;
 
 var_decl = 
-	'declare' name=var_name |
-	'define' name=var_name ASSIGN value=expr
+	'declare' name=var_name (COMMA name=var_name)* |
+	'define' name=var_name ASSIGN value=expr (COMMA name=var_name ASSIGN value=expr)*
 	;
 	
 assign = 

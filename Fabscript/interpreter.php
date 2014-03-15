@@ -65,7 +65,7 @@ class Fabscript_Interpreter {
 				return $this->interpret_case_branch($ast);
 
 			case "var_decl":
-				return $this->interpret_var_declaration($ast);
+				return $this->interpret_var_declarations($ast);
 			case "assign":
 				return $this->interpret_assignment($ast);
 
@@ -489,18 +489,23 @@ class Fabscript_Interpreter {
 
 	}
 
-	private function interpret_var_declaration($ast) {
+	private function interpret_var_declarations($ast) {
+
+		$declarations = new Fabscript_Declarations();
 
 		$children = $ast->getChildren();
-		$varName = $children[0]->getText();
-
-		if (count($children) == 2) {
-			$initExpr = $this->interpret($children[1]);
-		} else {
-			$initExpr = null;
+		foreach ($children as $child) {
+			$grandChildren = $child->getChildren();
+			$varName = $grandChildren[0]->getText();
+			if (count($grandChildren) == 2) {
+				$initExpr = $this->interpret($grandChildren[1]);
+			} else {
+				$initExpr = null;
+			}
+			$declarations->add(new Fabscript_Declaration($varName, $initExpr));
 		}
 
-		return new Fabscript_Declaration($varName, $initExpr);
+		return $declarations;
 
 	}
 
