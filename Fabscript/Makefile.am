@@ -1,4 +1,5 @@
 EXTRA_DIST = \
+	api.php \
 	block.php  \
 	break_continue.php \
 	code_creator.php \
