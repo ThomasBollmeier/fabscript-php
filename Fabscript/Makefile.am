@@ -14,5 +14,5 @@ EXTRA_DIST = \
 	preprocessor.php \
 	snippet.php
 
-fabscriptdir = $(prefix)/lib/php/Fabscript
+fabscriptdir = $(prefix)/Fabscript
 fabscript_DATA = $(EXTRA_DIST)
